@@ -1,0 +1,16 @@
+<div class=node-content>
+	<div class=node-header><h3>{{name}}</h3>{{>header}}</div>
+	<div class=node-body>{{>body}}</div>
+	<ol class="node-in node-io">
+		{{#inputs}}
+		<li><span class=connector></span><span class=label>{{.}}</span></li> 
+		{{/inputs}}
+	</ol>
+	<ol class="node-out node-io">
+		{{#outputs}}
+		<li><span class=label>{{.}}</span><span class=connector></span></li>
+		{{/outputs}}
+	</ol>
+	<div class=node-footer>{{>footer}}<div class=resize-handler></div></div>
+	<hr />
+</div>

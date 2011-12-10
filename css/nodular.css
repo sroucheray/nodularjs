@@ -1,0 +1,231 @@
+html, body {
+    height: 100%;
+}
+
+body{
+	background-color:white; 
+	background-image: 
+		linear-gradient(white 2px, transparent 2px),   
+		linear-gradient(0, white 2px, transparent 2px),   
+		linear-gradient(rgba(255,255,255,.3) 1px, transparent 1px),   
+		linear-gradient(0, rgba(255,255,255,.3) 1px, transparent 1px); 
+	background-size:100px 100px, 100px 100px, 20px 20px, 20px 20px; 
+	background-position:-2px -2px, -2px -2px, -1px -1px, -1px -1px; 
+	
+	background-color:white; 
+	background-image: 
+		-moz-linear-gradient(rgba(204,204,204,0.5) 2px, transparent 2px),   
+		-moz-linear-gradient(0, rgba(204,204,204,0.5) 2px, transparent 2px),   
+		-moz-linear-gradient(rgba(204,204,204,.3) 1px, transparent 1px),   
+		-moz-linear-gradient(0, rgba(204,204,204,.3) 1px, transparent 1px); 
+	background-size:100px 100px, 100px 100px, 20px 20px, 20px 20px; 
+	background-position:-2px -2px, -2px -2px, -1px -1px, -1px -1px;
+	
+	background-color:white; 
+	background-image: 
+		-webkit-linear-gradient(rgba(204,204,204,0.5) 2px, transparent 2px),   
+		-webkit-linear-gradient(0, rgba(204,204,204,0.5) 2px, transparent 2px),   
+		-webkit-linear-gradient(rgba(204,204,204,.3) 1px, transparent 1px),   
+		-webkit-linear-gradient(0, rgba(204,204,204,.3) 1px, transparent 1px); 
+	background-size:100px 100px, 100px 100px, 20px 20px, 20px 20px; 
+	background-position:-2px -2px, -2px -2px, -1px -1px, -1px -1px
+}
+
+/* Nodes */
+.node{
+	position : absolute;
+	padding: 40px;
+}
+
+.node.dragging *{
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	user-select: none;
+	cursor: move;
+	cursor: url(grabbing.cur), move;
+	cursor: url(grabbing.cur);
+	cursor:-moz-grabbing;
+	cursor:grabbing;
+	/*cursor:-webkit-grabbing;*/
+}
+.node-content{
+	position : relative;
+	width : 200px;
+	height : 200px;
+	background-clip: padding-box;
+    background-color: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 6px 6px 6px 6px;
+    box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.3);
+	overflow: visible;
+	
+	-moz-transition-property: box-shadow, border;  
+	-moz-transition-duration: 0.2s; 
+	-webkit-transition-property: box-shadow, border;  
+	-webkit-transition-duration: 0.2s; 
+	-ms-transition-property: box-shadow, border;  
+	-ms-transition-duration: 0.2s; 
+	-o-transition-property: box-shadow, border;  
+	-o-transition-duration: 0.2s; 
+	transition-property: box-shadow, border;  
+	transition-duration: 0.2s; 
+}
+
+.node-content:hover{
+    border: 1px solid rgba(0, 0, 0, 0.6);
+}
+
+.node.dragging .node-content{
+    box-shadow: 10px 10px 12px rgba(0, 0, 0, 0.3);
+}
+
+.node-header{
+	background-color:#F5F5F5;
+    border-radius: 6px 6px 0 0;
+    border-bottom: 1px solid #EEEEEE;
+    padding: 0 15px;
+	cursor: url(grab.cur), move;
+	cursor: url(grab.cur);
+	/*cursor: move;
+	cursor:grab;
+	cursor:-moz-grab;
+	cursor:-webkit-grab;*/
+}
+
+.node-header h3{
+	font-size:12px;
+	line-height: 30px;
+}
+
+.node-footer{
+    position: absolute;
+	bottom: 0;
+    padding: 5px 15px;
+    right: 0;
+}
+
+.node-footer .resize-handler{
+	position : absolute;
+	right : 0;
+	bottom : 0;
+    font-size: 0;
+    line-height: 0;
+    width: 14px;
+	height:14px;
+	background:url(resize-handle-bottom-right.gif) no-repeat;
+	cursor: nw-resize;
+}
+
+.node-io{
+    overflow: visible;
+    position: absolute;
+	margin : 0;
+	padding : 0;
+	list-style:none;
+}
+
+.node-io li{
+    overflow: visible;
+}
+
+.node-in{
+	left: -11px;
+}
+
+.node-out{
+	right: -11px;
+}
+
+.node-io .connector{
+	width:10px;
+	height:10px;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+	overflow: visible;
+    background-color: #FFFFFF;
+	
+	-moz-transition-property: border;  
+	-moz-transition-duration: 0.2s; 
+	-webkit-transition-property: border;  
+	-webkit-transition-duration: 0.2s; 
+	-ms-transition-property: border;  
+	-ms-transition-duration: 0.2s; 
+	-o-transition-property: border;  
+	-o-transition-duration: 0.2s; 
+	transition-property: border;  
+	transition-duration: 0.2s; 
+}
+
+.node-io .connector:hover{
+    border: 1px solid rgba(255, 0, 0, 0.3);
+	cursor: pointer;
+}
+
+
+.node-content:hover .node-io .connector{
+    border: 1px solid rgba(0, 0, 0, 0.6);
+}
+
+.node-io li span{
+	display:inline-block;
+	vertical-align: middle;
+}
+
+.node-io .label{
+	border-radius: 3px 0 0 3px;
+	padding: 0 3px;
+	height: 11px;
+    line-height: 10px;
+	opacity:0.2;
+	
+	-moz-transition-property: opacity;  
+	-moz-transition-duration: 0.2s; 
+	-webkit-transition-property: opacity;  
+	-webkit-transition-duration: 0.2s; 
+	-ms-transition-property: opacity;  
+	-ms-transition-duration: 0.2s; 
+	-o-transition-property: opacity;  
+	-o-transition-duration: 0.2s; 
+	transition-property: opacity;  
+	transition-duration: 0.2s; 
+}
+
+.node-io:hover .label{
+	opacity:1;
+	
+	-moz-transition-property: opacity;  
+	-moz-transition-duration: 0.2s; 
+	-webkit-transition-property: opacity;  
+	-webkit-transition-duration: 0.2s; 
+	-ms-transition-property: opacity;  
+	-ms-transition-duration: 0.2s; 
+	-o-transition-property: opacity;  
+	-o-transition-duration: 0.2s; 
+	transition-property: opacity;  
+	transition-duration: 0.2s; 
+}
+
+.node-in .connector, .node-in .connector:hover, .node-content:hover .node-in .connector{
+	border-right : none;
+}
+
+.node-out .connector, .node-out .connector:hover, .node-content:hover .node-out .connector{
+	border-left : none;
+    box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.3);
+}
+
+.node-in .label{
+	border-radius: 0 3px 3px 0;
+}
+
+.node-out .label{
+	border-radius: 3px 0 0 3px;
+}
+
+.node-in li{
+	margin-bottom:11px;
+}
+
+.node-out li{
+	margin-bottom:4px;
+	text-align: right;
+}
