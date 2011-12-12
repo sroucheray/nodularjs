@@ -1,8 +1,26 @@
 html, body {
     height: 100%;
+	overflow: hidden;
 }
 
-body{
+body.noSelection{
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	user-select: none;
+}
+
+#svgarrows{
+	width:100%;
+	height:100%;
+	position: absolute;
+	background:transparent;
+}
+
+#viewportContainer{
+	width:100%;
+	height:100%;
+	position:relative;
+	
 	background-color:white; 
 	background-image: 
 		linear-gradient(white 2px, transparent 2px),   
@@ -31,6 +49,35 @@ body{
 	background-position:-2px -2px, -2px -2px, -1px -1px, -1px -1px
 }
 
+#viewportContainer.draggable{
+	cursor: move;
+	cursor: url(grab.cur), move;
+	cursor: url(grab.cur);
+	/*cursor: move;
+	cursor:grab;
+	cursor:-moz-grab;
+	cursor:-webkit-grab;*/
+}
+
+#viewportContainer.dragging{
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	user-select: none;
+	cursor: move;
+	cursor: move;
+	cursor: url(grabbing.cur), move;
+	cursor: url(grabbing.cur);
+	cursor:-moz-grabbing;
+	cursor:grabbing;
+}
+
+#viewport{
+	width:100%;
+	height:100%;
+	position:absolute;
+	overflow: visible;
+}
+
 /* Nodes */
 .node{
 	position : absolute;
@@ -48,10 +95,17 @@ body{
 	cursor:grabbing;
 	/*cursor:-webkit-grabbing;*/
 }
+
+.node.resizing *{
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	user-select: none;
+}
+
 .node-content{
 	position : relative;
-	width : 200px;
-	height : 200px;
+	min-width : 100px;
+	min-height : 70px;
 	background-clip: padding-box;
     background-color: #FFFFFF;
     border: 1px solid rgba(0, 0, 0, 0.3);
@@ -84,6 +138,7 @@ body{
     border-radius: 6px 6px 0 0;
     border-bottom: 1px solid #EEEEEE;
     padding: 0 15px;
+	cursor: move;
 	cursor: url(grab.cur), move;
 	cursor: url(grab.cur);
 	/*cursor: move;
@@ -95,6 +150,12 @@ body{
 .node-header h3{
 	font-size:12px;
 	line-height: 30px;
+
+}
+
+.node-body{
+	position: absolute;
+    width: 100%;
 }
 
 .node-footer{
@@ -155,14 +216,18 @@ body{
 	transition-duration: 0.2s; 
 }
 
+.node-content:hover .node-io .connector{
+    border: 1px solid rgba(0, 0, 0, 0.6);
+}
+
 .node-io .connector:hover{
     border: 1px solid rgba(255, 0, 0, 0.3);
 	cursor: pointer;
 }
 
-
-.node-content:hover .node-io .connector{
-    border: 1px solid rgba(0, 0, 0, 0.6);
+.node-io .connector.over{
+    border: 1px solid rgba(0, 255, 0, 0.3);
+	cursor: pointer;
 }
 
 .node-io li span{
@@ -175,7 +240,7 @@ body{
 	padding: 0 3px;
 	height: 11px;
     line-height: 10px;
-	opacity:0.2;
+	opacity:0;
 	
 	-moz-transition-property: opacity;  
 	-moz-transition-duration: 0.2s; 
@@ -204,11 +269,11 @@ body{
 	transition-duration: 0.2s; 
 }
 
-.node-in .connector, .node-in .connector:hover, .node-content:hover .node-in .connector{
+.node-in .connector, .node-in .connector:hover, .node-in .connector.over, .node-content:hover .node-in .connector{
 	border-right : none;
 }
 
-.node-out .connector, .node-out .connector:hover, .node-content:hover .node-out .connector{
+.node-out .connector, .node-out .connector:hover, .node-out .connector.over, .node-content:hover .node-out .connector{
 	border-left : none;
     box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.3);
 }

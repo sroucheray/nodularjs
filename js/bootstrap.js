@@ -25,55 +25,77 @@
 	
 	require([
 			// Load our app module and pass it to our definition function
-			'models/node/node',
-			'views/node/node',
-			'models/node/sum/sum',
-			'views/node/sum/sum'
+			'collections/nodes',
+			'collections/links',
+			'models/graph'
 			
 			// Some plugins have to be loaded in order due to there non AMD compliance
 			// Because these scripts are not "modules" they do not pass any values to the definition function below
-		], function (Node, NodeView, Sum, SumView) {
+		], function (NodesCollection, LinksCollection, Graph) {
 		
-		var aNode = new Node();
-		var aNodeView = new NodeView({
-			model:aNode
+		var nodes  = new NodesCollection();
+		var links  = new LinksCollection();
+		
+		nodes.bind('linkTerminationFound', function(params){
+			graph.set({'target' : params});
 		});
 		
-		aNode.bind("change:inputs", function(e){
-			console.log("Render input", e);
-			aNodeView.render();
+		nodes.bind('linkTerminationNotFound', function(params){
+			graph.unset('target');
 		});
 		
-		aNode.bind("change:outputs", function(e){
-			console.log("Render output", e);
-			aNodeView.render();
+		var graph = new Graph();
+		
+		graph.createView(function(graphView){
+			nodes.bind('startLinkCreation', function(params){
+				console.log(params);
+				graph.set({
+					dynamicArrow : {
+						x1 : params.sourceX, 
+						y1 : params.sourceY, 
+						x2 : params.mouseX, 
+						y2 : params.mouseY
+					}
+				});
+			});
+			
+			nodes.bind('endLinkCreation', function(params){
+				var arrows;
+				
+				graph.unset('dynamicArrow');
+				
+				if(graph.has('targetNode')){
+					arrows = graph.get('arrows');
+					
+					
+					//arrows[]
+					//arrows[graph.has('targetNode').cid]
+				}
+				
+				links.createLink(params, graph.get('target'));
+				
+				console.log(params, graph.get('target'));
+				graph.set({
+					arrows : {
+						/*x1 : params.sourceX, 
+						y1 : params.sourceY, 
+						x2 : params.mouseX, 
+						y2 : params.mouseY*/
+					}
+				});
+				/*graph.set({
+					arrows : {
+						x1 : params.sourceX, 
+						y1 : params.sourceY, 
+						x2 : params.mouseX, 
+						y2 : params.mouseY
+					}
+				});*/
+			});
 		});
 		
 		
-		aNode.setIOs({
-				inputs : ["input1", "input2", "input3", "input4"],
-				outputs : ["output1", "output2", "output3", "output4"]
-		});
-		
-		
-		var aNode2 = new Sum();
-		var aNodeView2 = new SumView({
-			model:aNode2
-		});
-		
-		aNode2.bind("change:inputs", function(e){
-			aNodeView2.render();
-		});
-		
-		aNode2.bind("change:outputs", function(e){
-			aNodeView2.render();
-		});
-		
-		
-		aNode2.setIOs({
-				inputs : ["data 1", "entrée n°2", "test"],
-				outputs : ["simple sortie1", "o2"], 
-		});
-		
+		nodes.createNode('models/node/node');
+		nodes.createNode('models/node/sum/sum');		
 	});
 }());

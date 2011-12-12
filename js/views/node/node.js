@@ -1,5 +1,6 @@
 define(['text!templates/node/node.html', "mustache"], function (NodeTemplate, Mustache) {
-	var $body = $('body');
+	var $viewport = $('#viewport'),
+		$body = $('body');
 	
 	//Moving handlers
 	function startMoveHandler(e) {
@@ -11,15 +12,15 @@ define(['text!templates/node/node.html', "mustache"], function (NodeTemplate, Mu
 				oPos : $node.position()
 			};
 			
-		$('.node').css("z-index", "");
+		$('.node').css('z-index', '');
 		
 		$node.addClass("dragging").css("z-index", 1);
 		
-		$body.on('mousemove', "", data, movingHandler);
+		$viewport.on('mousemove', '', data, movingHandler);
 		
-		$body.on('mouseup', '.node-header', data, endMoveHandler);
-
-		$body.on('mouseup', "", data, endMoveHandler);
+		$body.on('mouseup', '', data, endMoveHandler);
+		
+		return false;
 	}
 
 	function movingHandler(e) {
@@ -29,12 +30,16 @@ define(['text!templates/node/node.html', "mustache"], function (NodeTemplate, Mu
 			'left' : e.originalEvent.pageX - d.offsetX + d.oPos.left + 'px',
 			'top' : e.originalEvent.pageY - d.offsetY + d.oPos.top + 'px'
 		});
+		
+		return false;
 	}
 
 	function endMoveHandler(e) {
-		$body.off('mousemove', "", movingHandler);
+		$viewport.off('mousemove', "", movingHandler);
 		
 		e.data.el.removeClass("dragging");
+		
+		return false;
 	}
 	
 	//Resizing handlers
@@ -42,22 +47,22 @@ define(['text!templates/node/node.html', "mustache"], function (NodeTemplate, Mu
 		var $node = $(this).parents('.node'),
 			$content = $node.find(".node-content")
 			data = {
+				node : $node,
 				el : $content,
 				offsetX : e.originalEvent.pageX,
 				offsetY : e.originalEvent.pageY,
 				oWidth : $content.width(),
 				oHeight : $content.height()
 			};
-		console.log($node.size());	
-		$('.node').css("z-index", "");
+		$('.node').css("z-index", '');
 		
-		$node.css("z-index", 1);
+		$node.addClass("resizing").css("z-index", 1);
 		
-		$body.on('mousemove', "", data, resizingHandler);
+		$viewport.on('mousemove', '', data, resizingHandler);
 		
-		$body.on('mouseup', '.node-header', data, endResizeHandler);
-
-		$body.on('mouseup', "", data, endResizeHandler);
+		$body.on('mouseup', '', data, endResizeHandler);
+		
+		return false;
 	}
 	
 	function resizingHandler(e) {
@@ -67,34 +72,92 @@ define(['text!templates/node/node.html', "mustache"], function (NodeTemplate, Mu
 			'width' : e.originalEvent.pageX - d.offsetX + d.oWidth + 'px',
 			'height' : e.originalEvent.pageY - d.offsetY + d.oHeight + 'px'
 		});
+		
+		return false;
 	}
 
 	function endResizeHandler(e) {
-		$body.off('mousemove', "", resizingHandler);
+		e.data.node.removeClass("resizing");
+		
+		$viewport.off('mousemove', "", resizingHandler);
+		
+		return false;
 	}
 	
 	//Register handlers
-	$body.on({'mousedown' : startMoveHandler}, '.node-header');
+	$viewport.on({'mousedown' : startMoveHandler}, '.node-header');
 	
-	$body.on({'mousedown' : startResizeDownHandler}, '.resize-handler');
+	$viewport.on({'mousedown' : startResizeDownHandler}, '.resize-handler');
 	
 	
 	return Backbone.View.extend({
 		tagName : 'div', 
 		className : 'node',
 		initialize : function (params) {
-			var $el = $(this.el);
+			var $el = $(this.el),
+				thisView = this;
 			
-			$el.attr({
-				'id' : params.model.cid
-			});
+			$el.attr({'id' : params.model.cid});
+	
+			//Handling link creation
+			function initStartCreateLink(e){
+				var $connector = $(e.target),
+					data = {
+						connectorElmnt : $connector,
+						connectorName : $connector.data('name'),
+						connectorType : $connector.hasClass('connector-in') ? 'to' : 'from'
+					};
+				
+				$body.on({'mousemove' : startCreateLink}, data);
+				$body.on({'mouseup' : stopCreateLink}, data);
+				$body.addClass('noSelection');
+			}
+			
+			function startCreateLink(e){
+				var offset = e.data.connectorElmnt.offset(),
+					sourceX = offset.left + e.data.connectorElmnt.width(),
+					sourceY = offset.top + e.data.connectorElmnt.height() / 2;
+				
+				thisView.trigger('startLinkCreation', _.extend({
+						mouseX : e.originalEvent.pageX,
+						mouseY : e.originalEvent.pageY
+					},
+					e.data)
+				);
+			}
+			
+			function stopCreateLink(e){
+				$body.off({'mousemove' : startCreateLink,'mouseup' : stopCreateLink});
+				thisView.trigger("endLinkCreation", e.data);
+				
+				$body.removeClass('noSelection');
+			}
+			
+			$el.on({'mousedown' : initStartCreateLink}, '.connector');
+			
 		},
 		render : function (partials) {
-			var $el = $(this.el);
+			var $el = $(this.el),
+				$header,
+				$viewportContent,
+				$footer,
+				$in,
+				$out;
+			$el.html(Mustache.to_html(NodeTemplate, _.extend({cid:this.model.cid}, this.model.toJSON()), _.extend({header:"", body:"", footer:""}, partials)));
 			
-			$el.html(Mustache.to_html(NodeTemplate, this.model.toJSON(), _.extend({header:"", body:"", footer:""}, partials)));
+			$viewport.append($el);
 			
-			$body.append($el);
+			$header = $el.find(".node-header");
+			$viewportContent = $el.find(".node-body");
+			$footer = $el.find(".node-footer");
+			$in = $el.find(".node-in");
+			$out = $el.find(".node-out");
+			
+			var headerFooterHeight = $header.outerHeight() + $footer.outerHeight();
+			$el.children('.node-content').css({
+				'minHeight' : Math.max($viewportContent.outerHeight() + headerFooterHeight, $in.outerHeight() + headerFooterHeight, $out.outerHeight() + headerFooterHeight),
+				'minWidth'  : Math.max($viewportContent.outerWidth(), $header.outerWidth(), $in.outerWidth() + $out.outerWidth())
+			});
 			
 			return this;
 		}
