@@ -2,10 +2,35 @@ define(function (NodeTemplate, Mustache) {
 	var $viewportContainer = $('#viewportContainer'),
 		$body = $('body'),
 		$viewport = $('#viewport'),
+		$svgArrows = $('#svgarrows'),
 		isCtrlPressed = false,
 		svg, svgGroupTempArrow, tmpLine,
 		arrows = [];
 
+	$svgArrows.svg({onLoad: function(svgCanvas){
+		svg = svgCanvas;
+		svgGroupTempArrow = svg.group({stroke: '#AAAAAA', strokeWidth: 1});
+		svg.group({stroke: '#AAAAAA', strokeWidth: 1, id:'arrows'});
+	}})
+	
+	$('#svgarrows #arrows').on({
+		'mouseover' : function(){
+			console.log('over svg');
+			$(this).attr({
+				stroke : '#000000',
+				strokeWidth : 2
+			});
+		},
+		'mouseout' :  function(){
+			console.log('over svg');
+			$(this).attr({
+				stroke : '#AAAAAA',
+				strokeWidth : 1
+			});
+		}
+	}, 'line');
+	
+			
 	//Moving handlers
 	function startMoveHandler(e) {
 		var data;
@@ -41,6 +66,11 @@ define(function (NodeTemplate, Mustache) {
 			'top' : yOffset + 'px'
 		});
 		
+		/*$svgArrows.css({
+			'left' : -xOffset + 'px',
+			'top' : -yOffset + 'px'
+		});*/
+		
 		$viewportContainer.css('backgroundPosition', backgroundPositionText);
 	}
 
@@ -70,16 +100,12 @@ define(function (NodeTemplate, Mustache) {
 	return Backbone.View.extend({
 		tagName : 'body', 
 		initialize : function (params) {
-			$('#svgarrows').svg({onLoad: function(svgCanvas){
-				svg = svgCanvas;
-				svgGroupTempArrow = svg.group({stroke: '#AAAAAA', strokeWidth: 1});
-			}});
 		},
 		renderDynamicArrow : function(lineParams){
 			console.log('renderDynamicArrow');
 			if(svg){
 				if(!tmpLine){
-					tmpLine = svg.line(svgGroupTempArrow, 0, 0, 0, 0, 0);
+					tmpLine = svg.line(svgGroupTempArrow, 0, 0, 0, 0);
 				}
 				
 				if(lineParams){

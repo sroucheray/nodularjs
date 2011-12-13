@@ -3,12 +3,6 @@ html, body {
 	overflow: hidden;
 }
 
-body.noSelection{
-	-moz-user-select: none;
-	-webkit-user-select: none;
-	user-select: none;
-}
-
 #svgarrows{
 	width:100%;
 	height:100%;
@@ -20,6 +14,10 @@ body.noSelection{
 	width:100%;
 	height:100%;
 	position:relative;
+	
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	user-select: none;
 	
 	background-color:white; 
 	background-image: 

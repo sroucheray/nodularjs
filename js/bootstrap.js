@@ -34,7 +34,6 @@
 		], function (NodesCollection, LinksCollection, Graph) {
 		
 		var nodes  = new NodesCollection();
-		var links  = new LinksCollection();
 		
 		nodes.bind('linkTerminationFound', function(params){
 			graph.set({'target' : params});
@@ -45,6 +44,7 @@
 		});
 		
 		var graph = new Graph();
+		var links  = new LinksCollection();
 		
 		graph.createView(function(graphView){
 			nodes.bind('startLinkCreation', function(params){

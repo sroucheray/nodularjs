@@ -1,4 +1,4 @@
-define(['text!templates/node/node.html', "mustache"], function (NodeTemplate, Mustache) {
+define(['text!templates/node/node.html', 'mustache'], function (NodeTemplate, Mustache) {
 	var $viewport = $('#viewport'),
 		$body = $('body');
 	
@@ -14,7 +14,7 @@ define(['text!templates/node/node.html', "mustache"], function (NodeTemplate, Mu
 			
 		$('.node').css('z-index', '');
 		
-		$node.addClass("dragging").css("z-index", 1);
+		$node.addClass('dragging').css('z-index', 1);
 		
 		$viewport.on('mousemove', '', data, movingHandler);
 		
@@ -31,13 +31,15 @@ define(['text!templates/node/node.html', "mustache"], function (NodeTemplate, Mu
 			'top' : e.originalEvent.pageY - d.offsetY + d.oPos.top + 'px'
 		});
 		
+		d.el.trigger('moving');
+		
 		return false;
 	}
 
 	function endMoveHandler(e) {
-		$viewport.off('mousemove', "", movingHandler);
+		$viewport.off('mousemove', '', movingHandler);
 		
-		e.data.el.removeClass("dragging");
+		e.data.el.removeClass('dragging');
 		
 		return false;
 	}
@@ -45,7 +47,7 @@ define(['text!templates/node/node.html', "mustache"], function (NodeTemplate, Mu
 	//Resizing handlers
 	function startResizeDownHandler(e) {
 		var $node = $(this).parents('.node'),
-			$content = $node.find(".node-content")
+			$content = $node.find('.node-content')
 			data = {
 				node : $node,
 				el : $content,
@@ -54,9 +56,9 @@ define(['text!templates/node/node.html', "mustache"], function (NodeTemplate, Mu
 				oWidth : $content.width(),
 				oHeight : $content.height()
 			};
-		$('.node').css("z-index", '');
+		$('.node').css('z-index', '');
 		
-		$node.addClass("resizing").css("z-index", 1);
+		$node.addClass('resizing').css('z-index', 1);
 		
 		$viewport.on('mousemove', '', data, resizingHandler);
 		
@@ -73,13 +75,15 @@ define(['text!templates/node/node.html', "mustache"], function (NodeTemplate, Mu
 			'height' : e.originalEvent.pageY - d.offsetY + d.oHeight + 'px'
 		});
 		
+		d.el.trigger('resizing');
+		
 		return false;
 	}
 
 	function endResizeHandler(e) {
-		e.data.node.removeClass("resizing");
+		e.data.node.removeClass('resizing');
 		
-		$viewport.off('mousemove', "", resizingHandler);
+		$viewport.off('mousemove', '', resizingHandler);
 		
 		return false;
 	}
@@ -93,27 +97,17 @@ define(['text!templates/node/node.html', "mustache"], function (NodeTemplate, Mu
 	return Backbone.View.extend({
 		tagName : 'div', 
 		className : 'node',
+		events: {
+			'moving' : 'renderInvalidation',
+			'resizing' : 'renderInvalidation'
+		},
 		initialize : function (params) {
 			var $el = $(this.el),
 				thisView = this;
 			
 			$el.attr({'id' : params.model.cid});
-	
-			//Handling link creation
-			function initStartCreateLink(e){
-				var $connector = $(e.target),
-					data = {
-						connectorElmnt : $connector,
-						connectorName : $connector.data('name'),
-						connectorType : $connector.hasClass('connector-in') ? 'to' : 'from'
-					};
-				
-				$body.on({'mousemove' : startCreateLink}, data);
-				$body.on({'mouseup' : stopCreateLink}, data);
-				$body.addClass('noSelection');
-			}
 			
-			function startCreateLink(e){
+			function moveForLinkCreationHandler(e){
 				var offset = e.data.connectorElmnt.offset(),
 					sourceX = offset.left + e.data.connectorElmnt.width(),
 					sourceY = offset.top + e.data.connectorElmnt.height() / 2;
@@ -126,14 +120,40 @@ define(['text!templates/node/node.html', "mustache"], function (NodeTemplate, Mu
 				);
 			}
 			
-			function stopCreateLink(e){
-				$body.off({'mousemove' : startCreateLink,'mouseup' : stopCreateLink});
-				thisView.trigger("endLinkCreation", e.data);
+			$el.on({'mousedown' : function(e){
+				var $connector = $(this);
 				
-				$body.removeClass('noSelection');
-			}
+				thisView.trigger('linkFrom', {
+					nodeId : $connector.data('node'),
+					connectorId : $connector.attr('id'),
+					connectorType : $connector.hasClass('connector-in') ? 'to' : 'from'
+				});
 			
-			$el.on({'mousedown' : initStartCreateLink}, '.connector');
+				$body.on({'mousemove' : moveForLinkCreationHandler}, {
+						connectorElmnt : $connector,
+						connectorName : $connector.data('name'),
+						connectorType : $connector.hasClass('connector-in') ? 'to' : 'from'
+					});
+			
+			}}, '.connector');
+			
+			$el.on({'mouseup' : function(e){
+				var $connector = $(this);
+				
+				thisView.trigger('linkTo', {
+					nodeId : $connector.data('node'),
+					connectorId : $connector.attr('id'),
+					connectorType : $connector.hasClass('connector-in') ? 'to' : 'from'
+				});
+				
+				return false;
+			}}, '.connector');
+			
+			
+			$body.on({'mouseup' : function(e){
+				thisView.trigger('cancelLink');
+				$body.off({'mousemove' : moveForLinkCreationHandler});
+			}});
 			
 		},
 		render : function (partials) {
@@ -143,15 +163,16 @@ define(['text!templates/node/node.html', "mustache"], function (NodeTemplate, Mu
 				$footer,
 				$in,
 				$out;
-			$el.html(Mustache.to_html(NodeTemplate, _.extend({cid:this.model.cid}, this.model.toJSON()), _.extend({header:"", body:"", footer:""}, partials)));
+				
+			$el.html(Mustache.to_html(NodeTemplate, _.extend({cid:this.model.cid}, this.model.toJSON()), _.extend({header:'', body:'', footer:''}, partials)));
 			
 			$viewport.append($el);
 			
-			$header = $el.find(".node-header");
-			$viewportContent = $el.find(".node-body");
-			$footer = $el.find(".node-footer");
-			$in = $el.find(".node-in");
-			$out = $el.find(".node-out");
+			$header = $el.find('.node-header');
+			$viewportContent = $el.find('.node-body');
+			$footer = $el.find('.node-footer');
+			$in = $el.find('.node-in');
+			$out = $el.find('.node-out');
 			
 			var headerFooterHeight = $header.outerHeight() + $footer.outerHeight();
 			$el.children('.node-content').css({
@@ -160,6 +181,9 @@ define(['text!templates/node/node.html', "mustache"], function (NodeTemplate, Mu
 			});
 			
 			return this;
+		},
+		renderInvalidation : function(){
+			this.model.trigger('renderInvalidation');
 		}
 	});
 });
