@@ -1,6 +1,5 @@
-define(['models/node/node', 'collections/links', 'models/link'], function (Node, LinksCollection, Link) {
-	var links = new LinksCollection(),
-		linkFrom;
+define(['models/node/node', 'models/link', 'views/link'], function (Node, Link, LinkView) {
+	var linkFrom;
 
 	return Backbone.Collection.extend({
 		model : Node,
@@ -30,13 +29,28 @@ define(['models/node/node', 'collections/links', 'models/link'], function (Node,
 							
 							
 							if(aLink.get('isValid')){
-								links.add(aLink, coll.getByCid(linkFrom.nodeId), coll.getByCid(linkTo.nodeId));
+								aLink.createView(function(view){
+									view.render();
+									
+									coll.getByCid(linkFrom.nodeId).bind('renderInvalidation', function(){
+										view.render();
+									});
+									
+									coll.getByCid(linkTo.nodeId).bind('renderInvalidation', function(){
+										view.render();
+									});
+									//TODO: should remove the bindings on link remove
+								});
 							}
 						}
 					});
 					
 					aNodeView.bind('cancelLink', function(params){
-						linkFrom = null;
+						LinkView.renderDynamicArrow();
+					});
+					
+					aNodeView.bind('startLinkCreation', function(params){
+						LinkView.renderDynamicArrow(params);
 					});
 				});
 			});

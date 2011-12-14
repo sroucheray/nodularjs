@@ -133,7 +133,7 @@ define(['text!templates/node/node.html', 'mustache'], function (NodeTemplate, Mu
 						connectorElmnt : $connector,
 						connectorName : $connector.data('name'),
 						connectorType : $connector.hasClass('connector-in') ? 'to' : 'from'
-					});
+				});
 			
 			}}, '.connector');
 			
@@ -146,7 +146,7 @@ define(['text!templates/node/node.html', 'mustache'], function (NodeTemplate, Mu
 					connectorType : $connector.hasClass('connector-in') ? 'to' : 'from'
 				});
 				
-				return false;
+				//return false;
 			}}, '.connector');
 			
 			

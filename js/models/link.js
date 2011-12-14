@@ -1,4 +1,4 @@
-define(["views/link"], function (LinkView) {
+define(['views/link'], function (LinkView) {
 	return Backbone.Model.extend({
 		defaults : {
 			isValid : false
@@ -9,15 +9,15 @@ define(["views/link"], function (LinkView) {
 			
 			if(from.nodeId === to.nodeId){
 				if(from.connectorId === to.connectorId){
-					console.log("Same connector");
+					console.log('Same connector');
 				}else{
-					console.log("Simple Circular reference");
+					console.log('Simple Circular reference');
 				}
 				//TODO: check for advanced circular references (maybe outside from here)
 			}else if(from.connectorType === to.connectorType){
-				console.log("Connector are of the same type");
+				console.log('Connector are of the same type');
 			}else{
-				console.log("link created");
+				console.log('link created');
 				this.set({isValid:true, id:from.connectorId+to.connectorId});
 			}
 		},
