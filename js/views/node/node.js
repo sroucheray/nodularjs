@@ -97,9 +97,11 @@ define(['text!templates/node/node.html', 'mustache'], function (NodeTemplate, Mu
 	return Backbone.View.extend({
 		tagName : 'div', 
 		className : 'node',
-		events: {
-			'moving' : 'renderInvalidation',
-			'resizing' : 'renderInvalidation'
+		events: function(){
+			return {
+				'moving' : 'renderInvalidation',
+				'resizing' : 'renderInvalidation'
+			}
 		},
 		initialize : function (params) {
 			var $el = $(this.el),

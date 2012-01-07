@@ -3,35 +3,9 @@ define(function () {
 		$vp = $('#viewport'),
 		arrowHeadWidth = 8,
 		arrowHeadHeight = 5,
-		svg, svgArrowGroup, svgTempLine, svgTempArrowHead, svgTempArrowHeadPath;
-
-	$svg.svg({onLoad: function(svgCanvas){
-		svg = svgCanvas;
-		svgArrowGroup = svg.group({stroke: '#AAAAAA', strokeWidth: 1});
-		svg.group({stroke: '#AAAAAA', strokeWidth: 1, id:'arrows'});
-	
-		svgTempLine = svg.line(svgArrowGroup, 0, 0, 0, 0, {id:'svg-line-temparrow'});
-		svgTempArrowHeadPath = svg.createPath();
-		svgTempArrowHead = svg.path(svgArrowGroup, createArrowHead(svgTempArrowHeadPath),{fill: 'none'});
-	}});
-	
-		
-	$(svgArrowGroup).on({
-		'mouseover' : function(){
-			var $this = $(this);
-			$this.add($this.next()).attr({
-				stroke : '#000000',
-				strokeWidth : 2
-			});
-		},
-		'mouseout' :  function(){
-			var $this = $(this);
-			$this.add($this.next()).attr({
-				stroke : '#AAAAAA',
-				strokeWidth : 1
-			});
-		}
-	}, 'line');
+		svg, svgArrowGroup, svgTempLine, svgTempArrowHead, svgTempArrowHeadPath,
+		standardStyle = {stroke: '#AAAAAA', strokeWidth: 1},
+		overStyle = {stroke : '#000000'};
 
 	function renderArrow(line, arrowHead, params){
 		var angle = Math.atan2(params.y1 - params.y2, params.x1 - params.x2) * 180 / Math.PI + 180;
@@ -46,19 +20,44 @@ define(function () {
 	function createArrowHead(path){
 		return path.moveTo(-arrowHeadWidth, -arrowHeadHeight).line(0, 0).line(-arrowHeadWidth, arrowHeadHeight);
 	}
+
+	$svg.svg({onLoad: function(svgCanvas){
+		svg = svgCanvas;
+		svgArrowGroup = svg.group(standardStyle);
+	
+		svgTempLine = svg.line(svgArrowGroup, 0, 0, 0, 0, {id:'svg-line-temparrow'});
+		svgTempArrowHeadPath = svg.createPath();
+		svgTempArrowHead = svg.path(svgArrowGroup, createArrowHead(svgTempArrowHeadPath),{fill: 'none'});
+	}});
 	
 	return Backbone.View.extend({
 		initialize : function (params) {
-			console.log("from inside view", params);
-			this.$fromConnector = $('#' + params.from.connectorId);
-			this.$toConnector = $('#' + params.to.connectorId);
+			var line, arrow, view = this;
+			this.$fromConnector = $('#' + params.fromConnectorId);
+			this.$toConnector = $('#' + params.toConnectorId);
 			this.xOffsetFrom = this.$fromConnector.width();
 			this.yOffsetFrom = this.$fromConnector.height() / 2;
 			this.xOffsetTo = 0;
 			this.yOffsetTo = this.$toConnector.height() / 2;
-			this.svgLine = svg.line(svgArrowGroup, 0, 0, 0, 0, {id:'svg-line-' + params.id});
+			this.svgLineTransparent = svg.line(svgArrowGroup, 0, 0, 0, 0, {strokeWidth: 20, opacity:0});
+			this.svgLine = line = svg.line(svgArrowGroup, 0, 0, 0, 0, {id:'svg-line-' + params.id});
 			this.svgArrowHeadPath = svg.createPath();
-			this.svgArrowHead = svg.path(svgArrowGroup, createArrowHead(this.svgArrowHeadPath),{fill: 'none'});
+			this.svgArrowHead = arrow = svg.path(svgArrowGroup, createArrowHead(this.svgArrowHeadPath),{fill: 'none'});
+			
+			
+			$(this.svgLineTransparent).add(line).on({
+				'mouseover' : function(e){
+					svg.change(line, overStyle);
+					svg.change(arrow, overStyle);
+				},
+				'mouseout' :  function(e){
+					svg.change(line, standardStyle);
+					svg.change(arrow, standardStyle);
+				},
+				'dblclick': function(){
+					view.trigger('removeLink');
+				}
+			});
 		},
 		render : function () {
 			var fromPos = this.$fromConnector.offset(),
@@ -72,11 +71,12 @@ define(function () {
 				};
 				
 			renderArrow(this.svgLine, this.svgArrowHead, line);
+			renderArrow(this.svgLineTransparent, this.svgArrowHead, line);
 			
 			return this;
 		},
 		remove : function(){
-			console.log('remove links');
+			$(this.svgLineTransparent).add(this.svgLine).add(this.svgArrowHead).remove();
 		}
 	}, {
 		renderDynamicArrow : function(params){			

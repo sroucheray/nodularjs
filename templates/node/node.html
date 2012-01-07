@@ -4,12 +4,12 @@
 	<div class=node-footer>{{>footer}}{{#canResize}}<div class=resize-handler></div>{{/canResize}}</div>
 	<ol class="node-in node-io">
 		{{#inputs}}
-		<li><span id="{{cid}}{{.}}" class="connector connector-in" data-name="{{.}}" data-node="{{cid}}"></span><span class=label>{{.}}</span></li> 
+		<li><span id="{{id}}" class="connector connector-in" data-name="{{id}}" data-node="{{cid}}"></span><span class=label>{{label}}</span></li> 
 		{{/inputs}}
 	</ol>
 	<ol class="node-out node-io">
 		{{#outputs}}
-		<li><span class=label>{{.}}</span><span id="{{cid}}{{.}}" class="connector connector-out" data-name="{{.}}" data-node="{{cid}}"></span></li>
+		<li><span class=label>{{label}}</span><span id="{{id}}" class="connector connector-out" data-name="{{id}}" data-node="{{cid}}"></span></li>
 		{{/outputs}}
 	</ol>
 </div>

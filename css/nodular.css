@@ -10,6 +10,10 @@ html, body {
 	background:transparent;
 }
 
+svg line{
+	cursor: pointer;
+}
+
 #viewportContainer{
 	width:100%;
 	height:100%;
@@ -79,7 +83,8 @@ html, body {
 /* Nodes */
 .node{
 	position : absolute;
-	padding: 40px;
+	padding: 0;
+	overflow:visible;
 }
 
 .node.dragging *{

@@ -26,26 +26,27 @@
 	require([
 			// Load our app module and pass it to our definition function
 			'collections/nodes',
-			'models/graph'
+			'models/graph',
+			'models/node/group'
 			
 			// Some plugins have to be loaded in order due to there non AMD compliance
 			// Because these scripts are not "modules" they do not pass any values to the definition function below
-		], function (NodesCollection, Graph) {
+		], function (NodesCollection, Graph, Group) {
 		
-		var nodes  = new NodesCollection();
+		//var nodes  = new NodesCollection();
 		
-		nodes.bind('linkTerminationFound', function(params){
+		/*nodes.bind('linkTerminationFound', function(params){
 			graph.set({'target' : params});
 		});
 		
 		nodes.bind('linkTerminationNotFound', function(params){
 			graph.unset('target');
 		});
-		
+		*/
 		var graph = new Graph();
 		
 		graph.createView(function(graphView){
-			nodes.bind('startLinkCreation', function(params){
+			/*nodes.bind('startLinkCreation', function(params){
 				graph.set({
 					dynamicArrow : {
 						x1 : params.sourceX, 
@@ -54,11 +55,15 @@
 						y2 : params.mouseY
 					}
 				});
-			});
+			});*/
 		});
+		var group = new Group();
+		group.addNode('models/node/timer/timer');
+		group.addNode('models/node/console/console');
+		group.addNode('models/node/show/show');
+		group.addNode('models/node/sum/sum');
 		
-		
-		nodes.createNode('models/node/node');
-		nodes.createNode('models/node/sum/sum');		
+		//nodes.createNode('models/node/node');
+		//nodes.createNode('models/node/sum/sum');		
 	});
 }());

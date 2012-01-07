@@ -1,4 +1,4 @@
-define(['models/node/node', 'models/link', 'views/link'], function (Node, Link, LinkView) {
+define(['models/node/node', 'views/link'], function (Node, LinkView) {
 	var linkFrom;
 
 	return Backbone.Collection.extend({
@@ -19,29 +19,14 @@ define(['models/node/node', 'models/link', 'views/link'], function (Node, Link, 
 					});
 					
 					aNodeView.bind('linkTo', function(linkTo){
-						var aLink;
+						var aLink, 
+							linkedNodes = {};
 					
 						if(linkFrom){
-							aLink =	new Link({
-								from : linkFrom.connectorType === 'from' ? linkFrom : linkTo,
-								to   : linkTo.connectorType === 'to' ? linkTo : linkFrom
-							});
-							
-							
-							if(aLink.get('isValid')){
-								aLink.createView(function(view){
-									view.render();
-									
-									coll.getByCid(linkFrom.nodeId).bind('renderInvalidation', function(){
-										view.render();
-									});
-									
-									coll.getByCid(linkTo.nodeId).bind('renderInvalidation', function(){
-										view.render();
-									});
-									//TODO: should remove the bindings on link remove
-								});
-							}
+							linkedNodes.from = linkFrom.connectorType === 'from' ? linkFrom : linkTo;
+							linkedNodes.to = linkedNodes.from === linkFrom ? linkTo : linkFrom;
+
+							coll.getByCid(linkedNodes.from.nodeId).linkTo(linkedNodes.from, coll.getByCid(linkedNodes.to.nodeId), linkedNodes.to);
 						}
 					});
 					
