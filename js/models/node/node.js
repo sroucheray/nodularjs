@@ -1,4 +1,6 @@
 define(['views/link'], function (LinkView) {
+	var NodeModel;
+	
 	function checkCircularReference(nodeTo, nodeFrom){
 		var id = nodeFrom.cid,
 			isCircular;
@@ -18,35 +20,43 @@ define(['views/link'], function (LinkView) {
 		
 		return isCircular;
 	}
-
-	return Backbone.Model.extend({
-		defaults : {		
-			name     : 'Bypass',
-			viewPath : 'views/node/node',
-			inputs : [
-				{
-					label : 'input',
-					defaultVal : null
-				}
-			],
-			outputs : [
-				{
-					label : 'output',
-					defaultVal : null
-				}
-			],
-			canResize 		: false
+	
+	NodeModel = Backbone.Model.extend({
+		defaults : function(){
+			return {		
+				name     : 'Bypass',
+				viewPath : 'views/node/node',
+				inputs : [
+					{
+						label : 'input',
+						'default' : null
+					}
+				],
+				outputs : [
+					{
+						label : 'output',
+						'default' : null
+					}
+				],
+				canResize : false
+			};
 		},
-		initialize : function(params){
+		mergeDefaults : function(newDefaults){
+			_.defaults(newDefaults, NodeModel.prototype.defaults());
+			return newDefaults;
+		},
+		initialize : function(){
 			_.each(this.get('inputs'), function(input){
 				if(!input.hasOwnProperty('id')){
 					input.id = _.uniqueId('input');
 				}
+				input.value = input['default'];
 			});
 			_.each(this.get('outputs'), function(output){
 				if(!output.hasOwnProperty('id')){
 					output.id = _.uniqueId('output');
 				}
+				output.value = output['default'];
 			});
 		
 			this.set({
@@ -54,13 +64,14 @@ define(['views/link'], function (LinkView) {
 				outputLinks : []
 			});
 			
-			this.inputValues = {};
 		},
 		linkTo : function(from, nodeTo, to){
 			var nodeFrom = this,
 				linkView, 
 				outputLinks = this.get('outputLinks'), 
-				linkAlreadyExist;
+				linkAlreadyExist,
+				nodeToUpdate,
+				renderLink;
 			if(from.nodeId === to.nodeId){
 				if(from.connectorId === to.connectorId){
 					console.log('Same connector');
@@ -79,52 +90,74 @@ define(['views/link'], function (LinkView) {
 				if(linkAlreadyExist){
 					console.log("Link already exist");
 				}else{				
-					console.log('link created');
+					//console.log('link created');
 					
 					outputLinks.push({
 						node : nodeTo,
 						connectorId : to.connectorId
 					});
-					console.log('process:output:' + from.connectorId);
-					nodeFrom.bind('process:output:' + from.connectorId, function(val){
+					
+					nodeToUpdate = function(val){
 						nodeTo.setInputValue(to.connectorId, val);
-					}, nodeTo);
-						
+					};
+					
+					nodeFrom.bind('process:output:' + from.connectorId, nodeToUpdate, nodeTo);
+					
+					nodeToUpdate(nodeFrom.getOutputValue(from.connectorId));					
+					
 					linkView =	new LinkView({
 						fromConnectorId : from.connectorId,
 						toConnectorId   : to.connectorId
 					});
 					
-					linkView.render();
+					renderLink = function(){
+						linkView.render();
+					}
 					
-					nodeFrom.bind('renderInvalidation', linkView.render, linkView);
-					nodeTo.bind('renderInvalidation', linkView.render, linkView);
+					renderLink();
+					
+					nodeFrom.bind('renderInvalidation', renderLink);
+					nodeTo.bind('renderInvalidation', renderLink);
 					
 					linkView.bind('removeLink', function(){
-						var outputLinks = nodeFrom.get('outputLinks');
-
-						nodeFrom.unbind('renderInvalidation', linkView.render);
-						nodeTo.unbind('renderInvalidation', linkView.render);
-						outputLinks = _.reject(nodeFrom.get('outputLinks'), function(outputLink){
+						var outputLinks = _.reject(nodeFrom.get('outputLinks'), function(outputLink){
 							return outputLink.node === nodeTo && outputLink.connectorId === to.connectorId;
 						});
+
+						nodeFrom.unbind('renderInvalidation', renderLink);
+						nodeTo.unbind('renderInvalidation', renderLink);
 						
 						nodeFrom.set({'outputLinks' : outputLinks});
+
 						linkView.remove();
 						linkView = null;
 						
-						nodeFrom.unbind('process:output:' + from.connectorId);
+						nodeFrom.unbind('process:output:' + from.connectorId, nodeToUpdate);
 					});
 				}
 			}			
 		},
 		setInputValue : function (inputId, val){
-			var input = _.find(this.get('input'), function(anInput){ return anInput.id === inputId; });
-			input.value = val;
-			this.trigger('process:process', input);
+			var input = _.find(this.get('inputs'), function(anInput){ 
+				return anInput.id === inputId; 
+			});
+			if(input){
+				input.value = val;
+				this.trigger('process:process', input);
+				this.process();
+			}
+		},
+		getOutputValue : function(outputId){
+			var output = _.find(this.get('outputs'), function(anOutput){ 
+				return anOutput.id === outputId; 
+			});
+			
+			return output.value;
 		},
 		process : function(){
-			this.trigger('process:output', this.inputValues.input);
+			this.trigger('process:output', this.get('inputs')[0].value);
 		}
 	});
+	
+	return NodeModel;
 });

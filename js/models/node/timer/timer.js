@@ -1,16 +1,18 @@
 define(['models/node/node'], function (NodeModel) {
 	return NodeModel.extend({
-		defaults : {		
-			name     : 'Timer',
-			viewPath : 'views/node/timer/timer',
-			inputs   : [],
-			outputs	 : [
-				{
-					label : 'frame',
-					'default' : 0
-				}
-			],
-			canResize : false
+		defaults : function(){
+			return {		
+				name     : 'Timer',
+				viewPath : 'views/node/timer/timer',
+				inputs   : [],
+				outputs	 : [
+					{
+						label : 'frames',
+						'default' : 0
+					}
+				],
+				canResize : false
+			}
 		},
 		initialize : function(params){
 			NodeModel.prototype.initialize.call(this, params);

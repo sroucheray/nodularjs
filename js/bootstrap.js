@@ -1,21 +1,14 @@
 (function () {
 	var devConfig = {
-		/*jquery : 'js/libs/jquery/jquery',
-		underscore : 'js/libs/underscore/underscore',
-		backbone : 'js/libs/backbone/backbone',
-		text : 'js/libs/require/text',*/
 		order : 'libs/require/order',
 		text : 'libs/require/text',
 		mustache : 'libs/mustache/mustache-requirejs',
 		view : 'views',
-		templates : '../templates'
-	};
+		templates : '../templates',
+		nodeModel : 'models/node'
+	},
 	
-	var prodConfig = _.extend({
-		/*jquery : 'libs/jquery/jquery-min',
-		underscore : 'libs/underscore/underscore-min',
-		backbone : 'libs/backbone/backbone',
-		text : 'libs/require/text',*/
+	prodConfig = _.extend({
 		templates : 'templates'
 	}, devConfig);
 	
@@ -25,26 +18,14 @@
 	
 	require([
 			// Load our app module and pass it to our definition function
-			'collections/nodes',
 			'models/graph',
 			'models/node/group'
 			
 			// Some plugins have to be loaded in order due to there non AMD compliance
 			// Because these scripts are not "modules" they do not pass any values to the definition function below
-		], function (NodesCollection, Graph, Group) {
+		], function (Graph, Group) {
 		
-		//var nodes  = new NodesCollection();
-		
-		/*nodes.bind('linkTerminationFound', function(params){
-			graph.set({'target' : params});
-		});
-		
-		nodes.bind('linkTerminationNotFound', function(params){
-			graph.unset('target');
-		});
-		*/
-		var graph = new Graph();
-		
+		var graph = new Graph();		
 		graph.createView(function(graphView){
 			/*nodes.bind('startLinkCreation', function(params){
 				graph.set({
@@ -61,9 +42,10 @@
 		group.addNode('models/node/timer/timer');
 		group.addNode('models/node/console/console');
 		group.addNode('models/node/show/show');
-		group.addNode('models/node/sum/sum');
+		group.addNode('models/node/show/show');
+		group.addNode('models/node/maths/addition');
+		group.addNode('models/node/maths/substraction');
+		group.addNode('models/node/maths/multiplication');
 		
-		//nodes.createNode('models/node/node');
-		//nodes.createNode('models/node/sum/sum');		
 	});
 }());

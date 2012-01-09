@@ -1,0 +1,63 @@
+define(['models/node/node', 'collections/nodes', 'views/link'], function (Node, NodesCollection, LinkView) {
+	return Node.extend({
+		defaults : {		
+			name      : 'Group',
+			viewPath  : 'views/node/group',
+			inputs    : [],
+			outputs   : [],
+			canResize : false,
+			coll : new NodesCollection()
+		},
+		addNode : function(nodePath){
+			var coll = this.get('coll');
+			require([nodePath], function(NodeModel){
+				var nodeModel = new NodeModel(),
+					nodeViewTargetLink;
+				
+				coll.add(nodeModel);
+							
+				require([nodeModel.get('viewPath')], function(NodeView){
+					var nodeView = new NodeView({model:nodeModel});
+					
+					nodeModel.bind("change:inputs", function(e){
+						nodeView.render();
+					});
+					
+					nodeModel.bind("change:outputs", function(e){
+						nodeView.render();
+					});
+					
+					if(typeof nodeView.updateFromModel === 'function'){
+						nodeModel.bind('change:model', nodeView.updateFromModel, nodeView);
+					}
+					
+					nodeView.render();
+					
+					nodeView.bind('linkFrom', function(params){
+						linkFrom = params;
+					});
+					
+					nodeView.bind('linkTo', function(linkTo){
+						var aLink, 
+							linkedNodes = {};
+					
+						if(linkFrom){
+							linkedNodes.from = linkFrom.connectorType === 'from' ? linkFrom : linkTo;
+							linkedNodes.to = linkedNodes.from === linkFrom ? linkTo : linkFrom;
+
+							coll.getByCid(linkedNodes.from.nodeId).linkTo(linkedNodes.from, coll.getByCid(linkedNodes.to.nodeId), linkedNodes.to);
+						}
+					});
+					
+					nodeView.bind('cancelLink', function(params){
+						LinkView.renderDynamicArrow();
+					});
+					
+					nodeView.bind('startLinkCreation', function(params){
+						LinkView.renderDynamicArrow(params);
+					});
+				});
+			});
+		}
+	});
+});

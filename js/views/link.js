@@ -40,7 +40,7 @@ define(function () {
 			this.xOffsetTo = 0;
 			this.yOffsetTo = this.$toConnector.height() / 2;
 			this.svgLineTransparent = svg.line(svgArrowGroup, 0, 0, 0, 0, {strokeWidth: 20, opacity:0});
-			this.svgLine = line = svg.line(svgArrowGroup, 0, 0, 0, 0, {id:'svg-line-' + params.id});
+			this.svgLine = line = svg.line(svgArrowGroup, 0, 0, 0, 0, {id:_.uniqueId('svg-line-')});
 			this.svgArrowHeadPath = svg.createPath();
 			this.svgArrowHead = arrow = svg.path(svgArrowGroup, createArrowHead(this.svgArrowHeadPath),{fill: 'none'});
 			

@@ -164,9 +164,18 @@ define(['text!templates/node/node.html', 'mustache'], function (NodeTemplate, Mu
 				$viewportContent,
 				$footer,
 				$in,
-				$out;
+				$out,
+				templates = {
+					header:'', 
+					body:'', 
+					footer:''
+				};
 				
-			$el.html(Mustache.to_html(NodeTemplate, _.extend({cid:this.model.cid}, this.model.toJSON()), _.extend({header:'', body:'', footer:''}, partials)));
+			if(this.model.has('templates')){
+				_.extend(templates, this.model.get('templates'));
+			}
+
+			$el.html(Mustache.to_html(NodeTemplate, _.extend({cid:this.model.cid}, this.model.toJSON()), _.extend(templates, partials)));
 			
 			$viewport.append($el);
 			
