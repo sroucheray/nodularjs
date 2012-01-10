@@ -12,7 +12,7 @@ define(['models/node/node'], function (NodeModel) {
 					}
 				],
 				canResize : false
-			}
+			};
 		},
 		initialize : function(params){
 			NodeModel.prototype.initialize.call(this, params);
@@ -26,14 +26,14 @@ define(['models/node/node'], function (NodeModel) {
 						function( callback ){
 							window.setTimeout(callback, 1000 / 60);
 						};
-			})();
+			}());
 			
 			this.frames = 0;
 			
 			this.frameRequest = function(){
 				if(!timer.isPaused){
 					window.requestAnimFrame(timer.frameRequest);
-					timer.trigger('process:output:' + timer.get('outputs')[0].id, ++timer.frames);
+					timer.setOutputValue(null, ++timer.frames);
 				}
 			};
 		},
@@ -46,7 +46,7 @@ define(['models/node/node'], function (NodeModel) {
 		stop : function(){
 			this.pause();
 			this.frames = 0;
-			this.trigger('process:output:' + this.get('outputs')[0].id, this.frames);
+			this.setOutputValue(null, 0);
 		},
 		process : function(){
 			this.isPaused = false;

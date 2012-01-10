@@ -26,7 +26,7 @@ define(['models/node/node', 'views/link'], function (Node, LinkView) {
 							linkedNodes.from = linkFrom.connectorType === 'from' ? linkFrom : linkTo;
 							linkedNodes.to = linkedNodes.from === linkFrom ? linkTo : linkFrom;
 
-							coll.getByCid(linkedNodes.from.nodeId).linkTo(linkedNodes.from, coll.getByCid(linkedNodes.to.nodeId), linkedNodes.to);
+							coll.get(linkedNodes.from.nodeId).linkTo(linkedNodes.from, coll.get(linkedNodes.to.nodeId), linkedNodes.to);
 						}
 					});
 					

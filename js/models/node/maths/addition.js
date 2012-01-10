@@ -27,7 +27,7 @@ define(['models/node/node'], function (NodeModel) {
 		},
 		process : function(){
 			var inputs = this.get('inputs');
-			this.trigger('process:output:' + this.get('outputs')[0].id, inputs[0].value + inputs[1].value);
+			this.setOutputValue(null, inputs[0].value + inputs[1].value);
 		}
 	});
 });

@@ -11,10 +11,17 @@ define(['models/node/node'], function (NodeModel) {
 						label : 'show',
 						'default' : ''
 					}
+				],
+				outputs	: [
+					{
+						label : 'shown',
+						'default' : ''
+					}
 				]
 			};
 		},
 		setInputValue : function (inputId, val){
+			NodeModel.prototype.setInputValue.call(this, inputId, val);
 			this.trigger('change:model', val);
 		}
 	});

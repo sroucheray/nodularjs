@@ -2,12 +2,12 @@ define(['views/link'], function (LinkView) {
 	var NodeModel;
 	
 	function checkCircularReference(nodeTo, nodeFrom){
-		var id = nodeFrom.cid,
+		var id = nodeFrom.id,
 			isCircular;
 		
 		function isCircularReference(nodeTo){
 			_.each(nodeTo.get('outputLinks'), function(outputLink){
-				if(outputLink.node.cid === id){
+				if(outputLink.node.id === id){
 					isCircular = true;
 					return false;
 				}else{
@@ -61,7 +61,8 @@ define(['views/link'], function (LinkView) {
 		
 			this.set({
 				inputLinks : [],
-				outputLinks : []
+				outputLinks : [],
+				id : _.uniqueId('node')
 			});
 			
 		},
@@ -143,19 +144,51 @@ define(['views/link'], function (LinkView) {
 			});
 			if(input){
 				input.value = val;
-				this.trigger('process:process', input);
+				//this.trigger('process:process', input);
 				this.process();
 			}
 		},
+		getInputValue : function(inputId){
+			var input;
+			if(!inputId){
+				return this.get('inputs')[0].value;
+			}else{
+				input = _.find(this.get('inputs'), function(anInput){ 
+					return anInput.id === inputId; 
+				});
+				
+				return input.value;
+			}
+		},
+		setOutputValue : function(outputId, val){
+			var output;
+			if(!outputId){
+				this.get('outputs')[0].value = val;
+				this.trigger('process:output:'+this.get('outputs')[0].id, val);
+			}else{
+				output = _.find(this.get('outputs'), function(anOutput){ 
+					return anOutput.id === outputId; 
+				});
+				
+				output.value = val;
+				
+				this.trigger('process:output:' + outputId, val);
+			}
+		},
 		getOutputValue : function(outputId){
-			var output = _.find(this.get('outputs'), function(anOutput){ 
-				return anOutput.id === outputId; 
-			});
-			
-			return output.value;
+			var output;
+			if(!outputId){
+				return this.get('outputs')[0].value;
+			}else{
+				output = _.find(this.get('outputs'), function(anOutput){ 
+					return anOutput.id === outputId; 
+				});
+				
+				return output.value;
+			}
 		},
 		process : function(){
-			this.trigger('process:output', this.get('inputs')[0].value);
+			this.setOutputValue(null, this.getInputValue());
 		}
 	});
 	

@@ -107,7 +107,7 @@ define(['text!templates/node/node.html', 'mustache'], function (NodeTemplate, Mu
 			var $el = $(this.el),
 				thisView = this;
 			
-			$el.attr({'id' : params.model.cid});
+			$el.attr({'id' : params.model.id});
 			
 			function moveForLinkCreationHandler(e){
 				var offset = e.data.connectorElmnt.offset();
@@ -130,9 +130,9 @@ define(['text!templates/node/node.html', 'mustache'], function (NodeTemplate, Mu
 				});
 			
 				$body.on({'mousemove' : moveForLinkCreationHandler}, {
-						connectorElmnt : $connector,
-						connectorName : $connector.data('name'),
-						connectorType : $connector.hasClass('connector-in') ? 'to' : 'from'
+					connectorElmnt : $connector,
+					connectorName : $connector.data('name'),
+					connectorType : $connector.hasClass('connector-in') ? 'to' : 'from'
 				});
 			
 			}}, '.connector');
@@ -174,7 +174,7 @@ define(['text!templates/node/node.html', 'mustache'], function (NodeTemplate, Mu
 				_.extend(templates, this.model.get('templates'));
 			}
 
-			$el.html(Mustache.to_html(NodeTemplate, _.extend({cid:this.model.cid}, this.model.toJSON()), _.extend(templates, partials)));
+			$el.html(Mustache.to_html(NodeTemplate, _.extend({cid:this.model.id}, this.model.toJSON()), _.extend(templates, partials)));
 			
 			$viewport.append($el);
 			

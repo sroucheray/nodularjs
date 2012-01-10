@@ -1,5 +1,4 @@
 define(['views/node/node', 'text!templates/node/show/body.html'], function (NodeView, BodyTemplate) {
-	
 	return NodeView.extend({
 		tagName : 'div', 
 		className : 'node',
