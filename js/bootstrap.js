@@ -25,7 +25,8 @@
 			// Because these scripts are not "modules" they do not pass any values to the definition function below
 		], function (Graph, Group) {
 		
-		var graph = new Graph();		
+		var graph = new Graph(),
+			group = new Group();		
 		graph.createView(function(graphView){
 			/*nodes.bind('startLinkCreation', function(params){
 				graph.set({
@@ -38,7 +39,7 @@
 				});
 			});*/
 		});
-		var group = new Group();
+
 		group.addNode('models/node/timer/timer');
 		group.addNode('models/node/console/console');
 		group.addNode('models/node/show/show');

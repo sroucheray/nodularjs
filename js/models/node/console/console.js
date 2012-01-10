@@ -11,7 +11,7 @@ define(['models/node/node'], function (NodeModel) {
 						'default' : ''
 					}
 				]
-			}
+			};
 		},
 		setInputValue : function (inputId, val){
 			console.log(val);

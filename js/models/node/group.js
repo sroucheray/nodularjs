@@ -1,4 +1,6 @@
 define(['models/node/node', 'collections/nodes', 'views/link'], function (Node, NodesCollection, LinkView) {
+	var linkFrom;
+	
 	return Node.extend({
 		defaults : {		
 			name      : 'Group',
@@ -11,19 +13,18 @@ define(['models/node/node', 'collections/nodes', 'views/link'], function (Node, 
 		addNode : function(nodePath){
 			var coll = this.get('coll');
 			require([nodePath], function(NodeModel){
-				var nodeModel = new NodeModel(),
-					nodeViewTargetLink;
+				var nodeModel = new NodeModel();
 				
 				coll.add(nodeModel);
 							
 				require([nodeModel.get('viewPath')], function(NodeView){
 					var nodeView = new NodeView({model:nodeModel});
 					
-					nodeModel.bind("change:inputs", function(e){
+					nodeModel.bind("change:inputs", function(){
 						nodeView.render();
 					});
 					
-					nodeModel.bind("change:outputs", function(e){
+					nodeModel.bind("change:outputs", function(){
 						nodeView.render();
 					});
 					
@@ -38,8 +39,7 @@ define(['models/node/node', 'collections/nodes', 'views/link'], function (Node, 
 					});
 					
 					nodeView.bind('linkTo', function(linkTo){
-						var aLink, 
-							linkedNodes = {};
+						var linkedNodes = {};
 					
 						if(linkFrom){
 							linkedNodes.from = linkFrom.connectorType === 'from' ? linkFrom : linkTo;

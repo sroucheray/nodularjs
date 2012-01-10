@@ -112,7 +112,7 @@ define(['views/link'], function (LinkView) {
 					
 					renderLink = function(){
 						linkView.render();
-					}
+					};
 					
 					renderLink();
 					

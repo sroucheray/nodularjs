@@ -47,7 +47,7 @@ define(['text!templates/node/node.html', 'mustache'], function (NodeTemplate, Mu
 	//Resizing handlers
 	function startResizeDownHandler(e) {
 		var $node = $(this).parents('.node'),
-			$content = $node.find('.node-content')
+			$content = $node.find('.node-content'),
 			data = {
 				node : $node,
 				el : $content,
@@ -99,9 +99,9 @@ define(['text!templates/node/node.html', 'mustache'], function (NodeTemplate, Mu
 		className : 'node',
 		events: function(){
 			return {
-				'moving' : 'renderInvalidation',
-				'resizing' : 'renderInvalidation'
-			}
+				moving : 'renderInvalidation',
+				resizing : 'renderInvalidation'
+			};
 		},
 		initialize : function (params) {
 			var $el = $(this.el),
@@ -110,9 +110,7 @@ define(['text!templates/node/node.html', 'mustache'], function (NodeTemplate, Mu
 			$el.attr({'id' : params.model.cid});
 			
 			function moveForLinkCreationHandler(e){
-				var offset = e.data.connectorElmnt.offset(),
-					sourceX = offset.left + e.data.connectorElmnt.width(),
-					sourceY = offset.top + e.data.connectorElmnt.height() / 2;
+				var offset = e.data.connectorElmnt.offset();
 				
 				thisView.trigger('startLinkCreation', _.extend({
 						mouseX : e.originalEvent.pageX,
@@ -169,7 +167,8 @@ define(['text!templates/node/node.html', 'mustache'], function (NodeTemplate, Mu
 					header:'', 
 					body:'', 
 					footer:''
-				};
+				},
+				headerFooterHeight;
 				
 			if(this.model.has('templates')){
 				_.extend(templates, this.model.get('templates'));
@@ -185,7 +184,7 @@ define(['text!templates/node/node.html', 'mustache'], function (NodeTemplate, Mu
 			$in = $el.find('.node-in');
 			$out = $el.find('.node-out');
 			
-			var headerFooterHeight = $header.outerHeight() + $footer.outerHeight();
+			headerFooterHeight = $header.outerHeight() + $footer.outerHeight();
 			$el.children('.node-content').css({
 				'minHeight' : Math.max($viewportContent.outerHeight() + headerFooterHeight, $in.outerHeight() + headerFooterHeight, $out.outerHeight() + headerFooterHeight),
 				'minWidth'  : Math.max($viewportContent.outerWidth(), $header.outerWidth(), $in.outerWidth() + $out.outerWidth())

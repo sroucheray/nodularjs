@@ -1,6 +1,4 @@
 define(['views/graph'], function (GraphView) {
-	var targetNode;
-	
 	return Backbone.Model.extend({
 		initialize : function(params){
 			this.set({'arrows' : []});

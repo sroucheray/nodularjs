@@ -9,10 +9,10 @@ define(['models/node/node'], function (NodeModel) {
 				inputs   : [
 					{
 						label : 'show',
-						default	  : ''
+						'default' : ''
 					}
 				]
-			}
+			};
 		},
 		setInputValue : function (inputId, val){
 			this.trigger('change:model', val);
