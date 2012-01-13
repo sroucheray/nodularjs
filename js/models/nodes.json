@@ -1,0 +1,141 @@
+{
+	"cats" : [
+		{
+			"cat" : "operators",
+			"nodes" : [
+				{
+					"path" : "operators/addition",
+					"label" : "a + b",
+					"desc" : "Addition",
+					"ins" : [
+						{
+							"name" : "a",
+							"desc" : "first operand"
+						},
+						{
+							"name" : "b",
+							"desc" : "second operand"
+						}
+					],
+					"outs" : [
+						{
+							"name" : "result",
+							"desc" : "a + b"
+						}
+					],
+					"ref" : "https://developer.mozilla.org/en/JavaScript/Reference/Operators/Arithmetic_Operators",
+					"tags" : "addition arithmetic",
+					"cat" : "operators"
+				},
+				{
+					"path" : "operators/substraction",
+					"label" : "a - b",
+					"desc" : "Substraction",
+					"ins" : [
+						{
+							"name" : "a",
+							"desc" : "first operand"
+						},
+						{
+							"name" : "b",
+							"desc" : "second operand"
+						}
+					],
+					"outs" : [
+						{
+							"name" : "result",
+							"desc" : "a - b"
+						}
+					],
+					"ref" : "https://developer.mozilla.org/en/JavaScript/Reference/Operators/Arithmetic_Operators",
+					"tags" : "substraction arithmetic",
+					"cat" : "operators"
+				}
+			]
+		},
+		{
+			"cat" : "time",
+			"nodes" : [
+				{
+					"path" : "time/timer",
+					"label" : "timer",
+					"desc" : "Provide an update at a maximum of 60 frames per seconds",
+					"outs" : [
+						{
+							"name" : "frames",
+							"desc" : "Frame number"
+						}
+					],
+					"ref" : "https://developer.mozilla.org/en/DOM/window.requestAnimationFrame",
+					"tags" : "timer framerate",
+					"cat" : "time"
+				},
+				{
+					"path" : "time/now",
+					"label" : "now",
+					"desc" : "Provide the current date as a timestamp",
+					"ins" : [
+						{
+							"name" : "update",
+							"desc" : "Trigger an update of the date"
+						}
+					],
+					"outs" : [
+						{
+							"name" : "now",
+							"desc" : "The date of now"
+						}
+					],
+					"ref" : "https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Date",
+					"tags" : "date now",
+					"cat" : "time"
+				}
+			]
+		},
+		{
+			"cat" : "debug",
+			"nodes" : [
+				{
+					"path" : "debug/show",
+					"label" : "show",
+					"desc" : "Shows the input and bypass the value to the output",
+					"ins" : [
+						{
+							"name" : "input",
+							"desc" : "Any input to display"
+						}
+					],
+					"outs" : [
+						{
+							"name" : "output",
+							"desc" : "The input value"
+						}
+					],
+					"ref" : "",
+					"tags" : "show display",
+					"cat" : "debug"
+				},
+				{
+					"path" : "debug/console",
+					"label" : "log",
+					"desc" : "console.log() the input",
+					"ins" : [
+						{
+							"name" : "input",
+							"desc" : "Any input to log"
+						}
+					],
+					"outs" : [
+						{
+							"name" : "output",
+							"desc" : "The input value"
+						}
+					],
+					"ref" : "https://developer.mozilla.org/en/Using_the_Web_Console",
+					"tags" : "console logging",
+					"cat" : "debug"
+				}
+			]
+		}
+	]
+}

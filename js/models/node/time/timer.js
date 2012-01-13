@@ -3,7 +3,7 @@ define(['models/node/node'], function (NodeModel) {
 		defaults : function(){
 			return {		
 				name     : 'Timer',
-				viewPath : 'views/node/timer/timer',
+				viewPath : 'views/node/time/timer',
 				inputs   : [],
 				outputs	 : [
 					{

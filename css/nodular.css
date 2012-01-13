@@ -19,10 +19,10 @@ svg line{
 	height:100%;
 	position:relative;
 	
-	-moz-user-select: none;
+	/*-moz-user-select: none;
 	-webkit-user-select: none;
 	user-select: none;
-	
+	*/
 	background-color:white; 
 	background-image: 
 		linear-gradient(white 2px, transparent 2px),   
@@ -297,4 +297,27 @@ svg line{
 .node-out li{
 	margin-bottom:4px;
 	text-align: right;
+}
+
+#selector{
+	width:240px;
+	height:100%;
+	position : absolute;
+	left:100px;
+}
+
+#selector ul{
+}
+
+#selector ul li{
+	float: left;
+    margin: 0 2px;
+}
+
+#selector span.protonode{
+	cursor:pointer;
+}
+
+#selector span.moving{
+	background-color: #46A546;
 }

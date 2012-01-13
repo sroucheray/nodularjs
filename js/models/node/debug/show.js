@@ -4,7 +4,7 @@ define(['models/node/node'], function (NodeModel) {
 		defaults : function(){
 			return {
 				name     : 'Show',
-				viewPath : 'views/node/show/show',
+				viewPath : 'views/node/debug/show',
 				canResize: true,
 				inputs   : [
 					{

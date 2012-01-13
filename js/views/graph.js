@@ -1,4 +1,4 @@
-define(function (NodeTemplate, Mustache) {
+define(function () {
 	var $viewportContainer = $('#viewportContainer'),
 		$body = $('body'),
 		$viewport = $('#viewport'),
