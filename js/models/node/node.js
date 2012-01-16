@@ -38,14 +38,15 @@ define(['views/link'], function (LinkView) {
 						'default' : null
 					}
 				],
-				canResize : false
+				canResize : false,
+				selected : false
 			};
 		},
 		mergeDefaults : function(newDefaults){
 			_.defaults(newDefaults, NodeModel.prototype.defaults());
 			return newDefaults;
 		},
-		initialize : function(){
+		initialize : function(params){
 			_.each(this.get('inputs'), function(input){
 				if(!input.hasOwnProperty('id')){
 					input.id = _.uniqueId('input');

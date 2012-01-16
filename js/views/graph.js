@@ -57,6 +57,7 @@ define(function () {
 		isCtrlPressed = e.type === 'keydown' && e.ctrlKey;
 		
 		$viewportContainer.toggleClass('draggable', isCtrlPressed);
+		$('.node-header').toggleClass('selectable', isCtrlPressed);
 		
 		if(!isCtrlPressed){
 			$viewportContainer

@@ -1,7 +1,7 @@
 {
 	"cats" : [
 		{
-			"cat" : "operators",
+			"cat" : "arithmetic",
 			"nodes" : [
 				{
 					"path" : "operators/addition",
@@ -24,8 +24,8 @@
 						}
 					],
 					"ref" : "https://developer.mozilla.org/en/JavaScript/Reference/Operators/Arithmetic_Operators",
-					"tags" : "addition arithmetic",
-					"cat" : "operators"
+					"tags" : "addition arithmetic operators",
+					"cat" : "arithmetic"
 				},
 				{
 					"path" : "operators/substraction",
@@ -48,8 +48,471 @@
 						}
 					],
 					"ref" : "https://developer.mozilla.org/en/JavaScript/Reference/Operators/Arithmetic_Operators",
-					"tags" : "substraction arithmetic",
-					"cat" : "operators"
+					"tags" : "substraction arithmetic operators",
+					"cat" : "arithmetic"
+				},
+				{
+					"path" : "operators/multiplication",
+					"label" : "a * b",
+					"desc" : "Multiplication",
+					"ins" : [
+						{
+							"name" : "a",
+							"desc" : "first operand"
+						},
+						{
+							"name" : "b",
+							"desc" : "second operand"
+						}
+					],
+					"outs" : [
+						{
+							"name" : "result",
+							"desc" : "a * b"
+						}
+					],
+					"ref" : "https://developer.mozilla.org/en/JavaScript/Reference/Operators/Arithmetic_Operators",
+					"tags" : "multiplication arithmetic operators",
+					"cat" : "arithmetic"
+				},
+				{
+					"path" : "operators/division",
+					"label" : "a / b",
+					"desc" : "Division",
+					"ins" : [
+						{
+							"name" : "a",
+							"desc" : "first operand"
+						},
+						{
+							"name" : "b",
+							"desc" : "second operand"
+						}
+					],
+					"outs" : [
+						{
+							"name" : "result",
+							"desc" : "a / b"
+						}
+					],
+					"ref" : "https://developer.mozilla.org/en/JavaScript/Reference/Operators/Arithmetic_Operators",
+					"tags" : "division arithmetic operators",
+					"cat" : "arithmetic"
+				},
+				{
+					"path" : "operators/modulo",
+					"label" : "a % b",
+					"desc" : "Modulo",
+					"ins" : [
+						{
+							"name" : "a",
+							"desc" : "first operand"
+						},
+						{
+							"name" : "b",
+							"desc" : "second operand"
+						}
+					],
+					"outs" : [
+						{
+							"name" : "result",
+							"desc" : "a % b"
+						}
+					],
+					"ref" : "https://developer.mozilla.org/en/JavaScript/Reference/Operators/Arithmetic_Operators",
+					"tags" : "modulo arithmetic operators",
+					"cat" : "arithmetic"
+				}
+			]
+		},
+		{
+			"cat" : "logical",
+			"nodes" : [
+				{
+					"path" : "operators/logical_and",
+					"label" : "a && b",
+					"desc" : "logical AND",
+					"ins" : [
+						{
+							"name" : "a",
+							"desc" : "first operand"
+						},
+						{
+							"name" : "b",
+							"desc" : "second operand"
+						}
+					],
+					"outs" : [
+						{
+							"name" : "result",
+							"desc" : "a && b"
+						}
+					],
+					"ref" : "https://developer.mozilla.org/en/JavaScript/Reference/Operators/Logical_Operators",
+					"tags" : "and logical operators",
+					"cat" : "logical"
+				},
+				{
+					"path" : "operators/logical_or",
+					"label" : "a || b",
+					"desc" : "logical OR",
+					"ins" : [
+						{
+							"name" : "a",
+							"desc" : "first operand"
+						},
+						{
+							"name" : "b",
+							"desc" : "second operand"
+						}
+					],
+					"outs" : [
+						{
+							"name" : "result",
+							"desc" : "a || b"
+						}
+					],
+					"ref" : "https://developer.mozilla.org/en/JavaScript/Reference/Operators/Logical_Operators",
+					"tags" : "or logical operators",
+					"cat" : "logical"
+				},
+				{
+					"path" : "operators/logical_not",
+					"label" : "!a",
+					"desc" : "logical NOT",
+					"ins" : [
+						{
+							"name" : "a",
+							"desc" : "first operand"
+						}
+					],
+					"outs" : [
+						{
+							"name" : "result",
+							"desc" : "!a"
+						}
+					],
+					"ref" : "https://developer.mozilla.org/en/JavaScript/Reference/Operators/Logical_Operators",
+					"tags" : "not logical operators",
+					"cat" : "logical"
+				}
+			]
+		},
+		{
+			"cat" : "bitwise",
+			"nodes" : [
+				{
+					"path" : "operators/bitwise_and",
+					"label" : "a & b",
+					"desc" : "Bitwise AND",
+					"ins" : [
+						{
+							"name" : "a",
+							"desc" : "first operand"
+						},
+						{
+							"name" : "b",
+							"desc" : "second operand"
+						}
+					],
+					"outs" : [
+						{
+							"name" : "result",
+							"desc" : "a & b"
+						}
+					],
+					"ref" : "https://developer.mozilla.org/en/JavaScript/Reference/Operators/Bitwise_Operators",
+					"tags" : "and bitwise operators",
+					"cat" : "bitwise"
+				},
+				{
+					"path" : "operators/bitwise_or",
+					"label" : "a | b",
+					"desc" : "Bitwise OR",
+					"ins" : [
+						{
+							"name" : "a",
+							"desc" : "first operand"
+						},
+						{
+							"name" : "b",
+							"desc" : "second operand"
+						}
+					],
+					"outs" : [
+						{
+							"name" : "result",
+							"desc" : "a | b"
+						}
+					],
+					"ref" : "https://developer.mozilla.org/en/JavaScript/Reference/Operators/Bitwise_Operators",
+					"tags" : "or bitwise operators",
+					"cat" : "bitwise"
+				},
+				{
+					"path" : "operators/bitwise_xor",
+					"label" : "a ^ b",
+					"desc" : "Bitwise OR",
+					"ins" : [
+						{
+							"name" : "a",
+							"desc" : "first operand"
+						},
+						{
+							"name" : "b",
+							"desc" : "second operand"
+						}
+					],
+					"outs" : [
+						{
+							"name" : "result",
+							"desc" : "a ^ b"
+						}
+					],
+					"ref" : "https://developer.mozilla.org/en/JavaScript/Reference/Operators/Bitwise_Operators",
+					"tags" : "xor bitwise operators",
+					"cat" : "bitwise"
+				},
+				{
+					"path" : "operators/bitwise_left_shift",
+					"label" : "a << b",
+					"desc" : "Bitwise left shift",
+					"ins" : [
+						{
+							"name" : "a",
+							"desc" : "first operand"
+						},
+						{
+							"name" : "b",
+							"desc" : "second operand"
+						}
+					],
+					"outs" : [
+						{
+							"name" : "result",
+							"desc" : "a << b"
+						}
+					],
+					"ref" : "https://developer.mozilla.org/en/JavaScript/Reference/Operators/Bitwise_Operators",
+					"tags" : "left shift bitwise operators",
+					"cat" : "bitwise"
+				},
+				{
+					"path" : "operators/bitwise_right_shift_sp",
+					"label" : "a >> b",
+					"desc" : "Bitwise sign-propagating right shift",
+					"ins" : [
+						{
+							"name" : "a",
+							"desc" : "first operand"
+						},
+						{
+							"name" : "b",
+							"desc" : "second operand"
+						}
+					],
+					"outs" : [
+						{
+							"name" : "result",
+							"desc" : "a >> b"
+						}
+					],
+					"ref" : "https://developer.mozilla.org/en/JavaScript/Reference/Operators/Bitwise_Operators",
+					"tags" : "sign right shift bitwise operators",
+					"cat" : "bitwise"
+				},
+				{
+					"path" : "operators/bitwise_right_shift_zf",
+					"label" : "a >>> b",
+					"desc" : "Bitwise zero-fill right shift",
+					"ins" : [
+						{
+							"name" : "a",
+							"desc" : "first operand"
+						},
+						{
+							"name" : "b",
+							"desc" : "second operand"
+						}
+					],
+					"outs" : [
+						{
+							"name" : "result",
+							"desc" : "a >>> b"
+						}
+					],
+					"ref" : "https://developer.mozilla.org/en/JavaScript/Reference/Operators/Bitwise_Operators",
+					"tags" : "zero fill right shift bitwise operators",
+					"cat" : "bitwise"
+				},
+				{
+					"path" : "operators/bitwise_not",
+					"label" : "~a",
+					"desc" : "Bitwise NOT",
+					"ins" : [
+						{
+							"name" : "a",
+							"desc" : "first operand"
+						}
+					],
+					"outs" : [
+						{
+							"name" : "result",
+							"desc" : "~a"
+						}
+					],
+					"ref" : "https://developer.mozilla.org/en/JavaScript/Reference/Operators/Bitwise_Operators",
+					"tags" : "not bitwise operators",
+					"cat" : "bitwise"
+				}
+			]
+		},
+		{
+			"cat" : "comparison",
+			"nodes" : [
+				{
+					"path" : "operators/comparison_equal",
+					"label" : "a == b",
+					"desc" : "Equal",
+					"ins" : [
+						{
+							"name" : "a",
+							"desc" : "first operand"
+						},
+						{
+							"name" : "b",
+							"desc" : "second operand"
+						}
+					],
+					"outs" : [
+						{
+							"name" : "result",
+							"desc" : "a == b"
+						}
+					],
+					"ref" : "https://developer.mozilla.org/en/JavaScript/Reference/Operators/Comparison_Operators",
+					"tags" : "equal operators",
+					"cat" : "comparison"
+				},
+				{
+					"path" : "operators/comparison_not_equal",
+					"label" : "a != b",
+					"desc" : "Not equal",
+					"ins" : [
+						{
+							"name" : "a",
+							"desc" : "first operand"
+						},
+						{
+							"name" : "b",
+							"desc" : "second operand"
+						}
+					],
+					"outs" : [
+						{
+							"name" : "result",
+							"desc" : "a != b"
+						}
+					],
+					"ref" : "https://developer.mozilla.org/en/JavaScript/Reference/Operators/Comparison_Operators",
+					"tags" : "not equal different operators",
+					"cat" : "comparison"
+				},
+				{
+					"path" : "operators/comparison_sup",
+					"label" : "a > b",
+					"desc" : "Superior",
+					"ins" : [
+						{
+							"name" : "a",
+							"desc" : "first operand"
+						},
+						{
+							"name" : "b",
+							"desc" : "second operand"
+						}
+					],
+					"outs" : [
+						{
+							"name" : "result",
+							"desc" : "a > b"
+						}
+					],
+					"ref" : "https://developer.mozilla.org/en/JavaScript/Reference/Operators/Comparison_Operators",
+					"tags" : "superior operators",
+					"cat" : "comparison"
+				},
+				{
+					"path" : "operators/comparison_inf",
+					"label" : "a < b",
+					"desc" : "Inferior",
+					"ins" : [
+						{
+							"name" : "a",
+							"desc" : "first operand"
+						},
+						{
+							"name" : "b",
+							"desc" : "second operand"
+						}
+					],
+					"outs" : [
+						{
+							"name" : "result",
+							"desc" : "a < b"
+						}
+					],
+					"ref" : "https://developer.mozilla.org/en/JavaScript/Reference/Operators/Comparison_Operators",
+					"tags" : "inferior operators",
+					"cat" : "comparison"
+				},
+				{
+					"path" : "operators/comparison_sup_or_equal",
+					"label" : "a >= b",
+					"desc" : "Superior or equal",
+					"ins" : [
+						{
+							"name" : "a",
+							"desc" : "first operand"
+						},
+						{
+							"name" : "b",
+							"desc" : "second operand"
+						}
+					],
+					"outs" : [
+						{
+							"name" : "result",
+							"desc" : "a >= b"
+						}
+					],
+					"ref" : "https://developer.mozilla.org/en/JavaScript/Reference/Operators/Comparison_Operators",
+					"tags" : "superior equal operators",
+					"cat" : "comparison"
+				},
+				{
+					"path" : "operators/comparison_inf_or_equal",
+					"label" : "a <= b",
+					"desc" : "Inferior or equal",
+					"ins" : [
+						{
+							"name" : "a",
+							"desc" : "first operand"
+						},
+						{
+							"name" : "b",
+							"desc" : "second operand"
+						}
+					],
+					"outs" : [
+						{
+							"name" : "result",
+							"desc" : "a <= b"
+						}
+					],
+					"ref" : "https://developer.mozilla.org/en/JavaScript/Reference/Operators/Comparison_Operators",
+					"tags" : "inferior equal operators",
+					"cat" : "comparison"
 				}
 			]
 		},

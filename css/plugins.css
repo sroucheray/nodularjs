@@ -1,3 +1,30 @@
 .show-show{
 	text-align:center;
 }
+
+#player{
+	padding: 0 40px 0 0;
+	width: 100px;
+}
+a.start, a.pause, a.stop{
+	opacity: 0.3;
+    display: inline-block;
+    height: 29px;
+    width: 29px;
+    text-indent: -99999px;
+	cursor: pointer;
+}
+a.start{
+	background: url('gfx/pictodeck.003.png') no-repeat scroll -762px -525px transparent;
+    width: 13px;
+	margin-left: 10px;
+}
+
+a.pause{
+	background: url('gfx/pictodeck.003.png') no-repeat scroll -625px -525px transparent;
+}
+
+a.stop{
+	background: url('gfx/pictodeck.003.png') no-repeat scroll -881px -525px transparent;
+	margin-right: 10px;
+}

@@ -11,21 +11,23 @@ define(['text!templates/node/node.html', 'mustache'], function (NodeTemplate, Mu
 				offsetY : e.originalEvent.pageY,
 				oPos : $node.position()
 			};
+		if(e.ctrlKey){
+			$node.trigger('invertSelection');
+		}else{
+			$('.node').css('z-index', '');
 			
-		$('.node').css('z-index', '');
-		
-		$node.addClass('dragging').css('z-index', 1);
-		
-		$viewport.on('mousemove', '', data, movingHandler);
-		
-		$body.on('mouseup', '', data, endMoveHandler);
-		
+			$node.addClass('dragging').css('z-index', 1);
+			
+			$viewport.on('mousemove', '', data, movingHandler);
+			
+			$body.on('mouseup', '', data, endMoveHandler);
+		}
 		return false;
 	}
 
 	function movingHandler(e) {
 		var d = e.data;
-		
+				
 		d.el.css({
 			'left' : e.originalEvent.pageX - d.offsetX + d.oPos.left + 'px',
 			'top' : e.originalEvent.pageY - d.offsetY + d.oPos.top + 'px'
@@ -38,7 +40,7 @@ define(['text!templates/node/node.html', 'mustache'], function (NodeTemplate, Mu
 
 	function endMoveHandler(e) {
 		$viewport.off('mousemove', '', movingHandler);
-		
+		$body.off('mouseup', '', endMoveHandler);
 		e.data.el.removeClass('dragging');
 		
 		return false;
@@ -84,6 +86,7 @@ define(['text!templates/node/node.html', 'mustache'], function (NodeTemplate, Mu
 		e.data.node.removeClass('resizing');
 		
 		$viewport.off('mousemove', '', resizingHandler);
+		$body.off('mouseup', '', endResizeHandler);
 		
 		return false;
 	}
@@ -100,12 +103,14 @@ define(['text!templates/node/node.html', 'mustache'], function (NodeTemplate, Mu
 		events: function(){
 			return {
 				moving : 'renderInvalidation',
-				resizing : 'renderInvalidation'
+				resizing : 'renderInvalidation',
+				invertSelection : 'invertSelection'
 			};
 		},
 		initialize : function (params) {
 			var $el = $(this.el),
-				thisView = this;
+				thisView = this,
+				viewState = this.model.get('viewState');
 			
 			$el.attr({'id' : params.model.id});
 			
@@ -155,9 +160,13 @@ define(['text!templates/node/node.html', 'mustache'], function (NodeTemplate, Mu
 				$body.off({'mousemove' : moveForLinkCreationHandler});
 			}});
 			
+			$el.css(viewState.position);
+			
+			this.render();
 		},
 		render : function (partials) {
 			var $el = $(this.el),
+				$nodeContent,
 				$header,
 				$viewportContent,
 				$footer,
@@ -178,6 +187,7 @@ define(['text!templates/node/node.html', 'mustache'], function (NodeTemplate, Mu
 			
 			$viewport.append($el);
 			
+			$nodeContent = $el.find('.node-content');
 			$header = $el.find('.node-header');
 			$viewportContent = $el.find('.node-body');
 			$footer = $el.find('.node-footer');
@@ -185,15 +195,40 @@ define(['text!templates/node/node.html', 'mustache'], function (NodeTemplate, Mu
 			$out = $el.find('.node-out');
 			
 			headerFooterHeight = $header.outerHeight() + $footer.outerHeight();
+			
 			$el.children('.node-content').css({
 				'minHeight' : Math.max($viewportContent.outerHeight() + headerFooterHeight, $in.outerHeight() + headerFooterHeight, $out.outerHeight() + headerFooterHeight),
 				'minWidth'  : Math.max($viewportContent.outerWidth(), $header.outerWidth(), $in.outerWidth() + $out.outerWidth())
 			});
 			
+			if($viewportContent.width() < $nodeContent.width()){
+				$viewportContent.css('width', '100%')
+			}
+			
 			return this;
 		},
 		renderInvalidation : function(){
+			var $el = $(this.el),
+				$content = $el.children('.node-content'),
+				viewState = {
+				position : $el.position(),
+				size : {
+					width : $content.width(),
+					height : $content.height()
+				}
+			}
 			this.model.trigger('renderInvalidation');
+			
+			this.model.set({
+				'viewState' : viewState
+			});
+		},
+		invertSelection : function(){
+			var selected = this.model.get('selected');
+			this.model.set({
+				'selected' : !selected
+			});
+			$(this.el).children('.node-content').toggleClass('selected', !selected);
 		}
 	});
 });

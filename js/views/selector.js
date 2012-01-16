@@ -1,4 +1,5 @@
 define(['text!templates/selector.html', 'mustache'], function (SelectorTemplate, Mustache) {
+	var blankRegex = /\s+/;
 	return Backbone.View.extend({
 		id : 'selector',
 		initialize : function(){
@@ -17,8 +18,12 @@ define(['text!templates/selector.html', 'mustache'], function (SelectorTemplate,
 				
 				//Handle filtering
 				$sb.keyup(function(){
-					//TODO: filtering input
-					$spans.show().not('[data-cat*="'+$sb.val()+'"]').not('[data-tags*="'+$sb.val()+'"]').hide();
+					var inputTextArray = $sb.val().split(blankRegex),
+						filteredSpans = $spans.show();
+					
+					_.each(inputTextArray, function(text){
+						$spans.not('[data-cat*="'+text+'"]').not('[data-tags*="'+text+'"]').hide();
+					});
 					
 					$notices.each(function(index, notice){
 						var $notice = $(notice),
@@ -28,14 +33,11 @@ define(['text!templates/selector.html', 'mustache'], function (SelectorTemplate,
 				});	
 				
 				
-				
-				////////////////
-				
+				//Handle drag and drop
 				$el.on({
 					'dragstart' : function (e) {
 						e.originalEvent.dataTransfer.effectAllowed = 'copy';
 						e.originalEvent.dataTransfer.setData("text/plain", $(this).data('path'));
-						// this/e.target is the source node.
 						$(this).addClass('moving');
 					},
 					'dragend' : function (e) {
@@ -45,65 +47,35 @@ define(['text!templates/selector.html', 'mustache'], function (SelectorTemplate,
 					}
 				}, 'span');
 				
-				$('#viewport').on({
+				$('#viewportContainer').on({
 					'dragenter' : function (e) {
 						$(this).addClass('over');
 					},
 					'dragover'  : function (e) {
-						if (e.preventDefault) {
-							e.preventDefault(); // Allows us to drop.
-						}
+						e.preventDefault();
 						e.originalEvent.dataTransfer.dropEffect = 'copy';
-						//console.log(e.originalEvent.offsetX)
 						return false;
 					},
 					'dragleave' : function (e) {
-						// this/e.target is previous target element.
 						$(this).removeClass('over');
 					},
 					'drop' : function (e) {
-						// this/e.target is current target element.
+						var viewportPos = $('#viewport').position();
 						if (e.stopPropagation) {
 							e.stopPropagation(); // stops the browser from redirecting.
 						}
 						selector.model.trigger('create:node', {
 							path : e.originalEvent.dataTransfer.getData("text/plain"),
-							x : e.originalEvent.offsetX || e.originalEvent.layerX,
-							y : e.originalEvent.offsetY || e.originalEvent.layerY,
+							viewState : {
+								position : {
+									left : (e.originalEvent.offsetX || e.originalEvent.layerX) - viewportPos.left,
+									top :  (e.originalEvent.offsetY || e.originalEvent.layerY) - viewportPos.top
+								}
+							}
 						});
 						return false;
 					}
 				});
-				
-				
-				/*$spans.each(function(index, span){
-					var $span = $(span);
-					span.setAttribute('draggable', 'true'); // Enable columns to be draggable.
-					$span.on('dragstart', handleDragStart, false);
-					$span.addEventListener('dragenter', handleDragEnter, false);
-					$span.addEventListener('dragover', handleDragOver, false);
-					$span.addEventListener('dragleave', handleDragLeave, false);
-					$span.addEventListener('drop', handleDrop, false);
-					$span.addEventListener('dragend', handleDragEnd, false);
-				});*/
-				/*[].forEach.call(cols_, function (col) {
-					col.setAttribute('draggable', 'true'); // Enable columns to be draggable.
-					col.addEventListener('dragstart', this.handleDragStart, false);
-					col.addEventListener('dragenter', this.handleDragEnter, false);
-					col.addEventListener('dragover', this.handleDragOver, false);
-					col.addEventListener('dragleave', this.handleDragLeave, false);
-					col.addEventListener('drop', this.handleDrop, false);
-					col.addEventListener('dragend', this.handleDragEnd, false);
-				});*/
-				
-				
-				
-				
-				
-				///////////////
-				
-				
-				
 			});		
 		}
 	});

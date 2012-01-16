@@ -10,11 +10,10 @@ define(['models/node/node', 'collections/nodes', 'views/link'], function (Node, 
 			canResize : false,
 			coll : new NodesCollection()
 		},
-		addNode : function(nodePath){
+		addNode : function(nodePath, data){
 			var coll = this.get('coll');
 			require([nodePath], function(NodeModel){
-				var nodeModel = new NodeModel();
-				
+				var nodeModel = new NodeModel(data);
 				coll.add(nodeModel);
 							
 				require([nodeModel.get('viewPath')], function(NodeView){
@@ -31,8 +30,6 @@ define(['models/node/node', 'collections/nodes', 'views/link'], function (Node, 
 					if(typeof nodeView.updateFromModel === 'function'){
 						nodeModel.bind('change:model', nodeView.updateFromModel, nodeView);
 					}
-					
-					nodeView.render();
 					
 					nodeView.bind('linkFrom', function(params){
 						linkFrom = params;

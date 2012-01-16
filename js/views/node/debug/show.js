@@ -15,7 +15,7 @@ define(['views/node/node', 'text!templates/node/show/body.html'], function (Node
 			return this;
 		},
 		updateFromModel : function(val){
-			this.$show.html(val);
+			this.$show.html(String(val));
 		}
 	});
 });

@@ -3,6 +3,11 @@ html, body {
 	overflow: hidden;
 }
 
+#littleboxes{
+	width:100%;
+	height:100%;
+}
+
 #svgarrows{
 	width:100%;
 	height:100%;
@@ -19,10 +24,10 @@ svg line{
 	height:100%;
 	position:relative;
 	
-	/*-moz-user-select: none;
+	-moz-user-select: none;
 	-webkit-user-select: none;
 	user-select: none;
-	*/
+	
 	background-color:white; 
 	background-image: 
 		linear-gradient(white 2px, transparent 2px),   
@@ -48,7 +53,9 @@ svg line{
 		-webkit-linear-gradient(rgba(204,204,204,.3) 1px, transparent 1px),   
 		-webkit-linear-gradient(0, rgba(204,204,204,.3) 1px, transparent 1px); 
 	background-size:100px 100px, 100px 100px, 20px 20px, 20px 20px; 
-	background-position:-2px -2px, -2px -2px, -1px -1px, -1px -1px
+	background-position:-2px -2px, -2px -2px, -1px -1px, -1px -1px;
+	
+	z-index: 0;
 }
 
 #viewportContainer.draggable{
@@ -128,8 +135,11 @@ svg line{
 	transition-duration: 0.2s; 
 }
 
+.node-content.selected{
+    border: 1px dashed;
+}
 .node-content:hover{
-    border: 1px solid rgba(0, 0, 0, 0.6);
+    /*border: 1px solid rgba(0, 0, 0, 0.6);*/
 }
 
 .node.dragging .node-content{
@@ -150,6 +160,10 @@ svg line{
 	cursor:-webkit-grab;*/
 }
 
+.node-header.selectable{
+	cursor: pointer;
+}
+
 .node-header h3{
 	font-size:12px;
 	line-height: 30px;
@@ -158,7 +172,6 @@ svg line{
 
 .node-body{
 	position: absolute;
-    width: 100%;
 	text-align: center;
 }
 
@@ -220,8 +233,11 @@ svg line{
 	transition-duration: 0.2s; 
 }
 
+.node-content.selected .node-io .connector{
+    border: 1px dashed rgba(0, 0, 0, 0.6);
+}
 .node-content:hover .node-io .connector{
-    border: 1px solid rgba(0, 0, 0, 0.6);
+    /*border: 1px solid rgba(0, 0, 0, 0.6);*/
 }
 
 .node-io .connector:hover{
@@ -273,11 +289,11 @@ svg line{
 	transition-duration: 0.2s; 
 }
 
-.node-in .connector, .node-in .connector:hover, .node-in .connector.over, .node-content:hover .node-in .connector{
+.node-in .connector, .node-in .connector:hover, .node-in .connector.over, .node-content:hover .node-in .connector, .node-content.selected.node-in .connector{
 	border-right : none;
 }
 
-.node-out .connector, .node-out .connector:hover, .node-out .connector.over, .node-content:hover .node-out .connector{
+.node-out .connector, .node-out .connector:hover, .node-out .connector.over, .node-content:hover .node-out .connector, .node-content.selected .node-out .connector{
 	border-left : none;
     box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.3);
 }
@@ -303,15 +319,25 @@ svg line{
 	width:240px;
 	height:100%;
 	position : absolute;
-	left:100px;
+	background-color: rgba(245, 245, 245, 0.9);
+	z-index:1;
+	
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) inset;
+    margin-bottom: 20px;
+    min-height: 20px;
+    padding: 19px;
 }
 
-#selector ul{
+#selector .nodelist{
+	height:100%;
+	overflow:hidden;
+	padding-right:20px;
 }
 
-#selector ul li{
-	float: left;
-    margin: 0 2px;
+#selector .nodelist.tooHigh:hover{
+	height:100%;
+	overflow: auto;
+	padding-right:0;
 }
 
 #selector span.protonode{
